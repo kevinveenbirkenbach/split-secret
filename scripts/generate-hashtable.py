@@ -29,7 +29,7 @@ def getEndnumber():
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('-a', '--amount',type=int, dest='amount_of_secret_holders',required=True)
+    parser.add_argument('-a', '--amount',type=int, dest='amount_of_secret_holders',required=True,choices=range(1,9))
     parser.add_argument('-q', '--quota', type=int, dest='decryption_quota', choices=range(1,101),required=True)
     args = parser.parse_args()
     amount_of_secret_holders = args.amount_of_secret_holders
@@ -44,35 +44,27 @@ if __name__ == '__main__':
     valid_numbers = re.compile(regex)
     unvalid_sequenz = re.compile("(.)\\1+")
     index = getStartnumber()
+    password_groups = {}
     while index < getEndnumber():
         index_str= ''.join(sorted(str(index)))
         if re.search(valid_numbers, index_str) and not re.search(unvalid_sequenz, index_str):
-            print(index_str)
+            password_group_index = int(index_str)
+            if not password_group_index in password_groups:
+                password_index = 1
+                password_groups[password_group_index] = {}
+                password_groups[password_group_index]['members'] = {}
+                password_groups[password_group_index]['password'] = '' 
+                password = ''
+                for secret_holder_index in index_str:
+                    password_groups[password_group_index]['members'][secret_holder_index]={}
+                    password_part = getPassword()
+                    password_groups[password_group_index]['members'][secret_holder_index]['password_part'] = password_part
+                    password_groups[password_group_index]['members'][secret_holder_index]['password_index'] = password_index
+                    password += password_part
+                    password_index += 1
+                password_groups[password_group_index]['password'] += password
         index += 1
-
-    
-  #  # Create Passwords
-  #  password_groups = {}
-  #  password_group_index = 0
-  #  secret_holder_index = 0 
-  #  while password_group_index < amount_of_secret_holders : 
-  #      password_groups[password_group_index] = {};
-  #      password_groups[password_group_index]['members'] = {}
-  #      password_groups[password_group_index]['password'] = '' 
-  #      group_members_count = 0
-  #      while group_members_count < amount_of_secret_holders :
-  #          if secret_holder_index == amount_of_secret_holders: 
-  #              secret_holder_index = 0
-  #          password_groups[password_group_index]['members'][secret_holder_index]={}
-  #          password_groups[password_group_index]['members'][secret_holder_index]['password_part'] = getPassword()
-  #          password_groups[password_group_index]['members'][secret_holder_index]['password_index'] = group_members_count
-  #          password_groups[password_group_index]['password'] += ''.join(password_groups[password_group_index]['members'][secret_holder_index]['password_part'])
-  #          secret_holder_index += 1
-  #          group_members_count += 1
-  #      #mathematical_formular_verification.append(sorted(password_groups[password_group_index]['members']))
-  #      mathematical_formular_verification.append(sorted(password_groups[password_group_index]['members']))
-  #      password_group_index += 1
-  #  print(password_groups)
+    print(password_groups)
 #
   #  # Create User Mapping
   #  user_splitted_passwords = {}
