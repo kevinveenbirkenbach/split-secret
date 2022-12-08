@@ -12,6 +12,8 @@ The purpose of this software is to splitt a secret over multiple people. Just if
 
 pip install numpy
 
+gpg -c
+
 ## Further Information
 - https://www.tutorialspoint.com/python/python_command_line_arguments.htm
 - https://docs.python.org/3/library/argparse.html#module-argparse
