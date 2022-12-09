@@ -43,7 +43,7 @@ if __name__ == '__main__':
                     decrypt.setUserPassword(getpass())
                     print("Decrypting User File...")
                     try:
-                        decrypt.setUserData();
+                        decrypt.initializeData();
                         break;
                     except:
                         print("Wrong password :(")
@@ -51,7 +51,7 @@ if __name__ == '__main__':
                 decrypt.setUserPassword(args.user_password)
                 print("Decrypting User File...")
                 try:
-                    decrypt.setUserData();
+                    decrypt.initializeData();
                 except:
                     print("Wrong password :(")
                     exit()
@@ -61,7 +61,7 @@ if __name__ == '__main__':
                 print("user_id: " + contact_id)
                 for label in decrypt.user_data['contacts'][contact_id]:
                     print(label + ": " + decrypt.user_data['contacts'][contact_id][label])
-            print("You need at least <<" + str(decrypt.getNeededEncryptersAmount()) +">> aditional people to decrypt the secret.")
+            print("You need at least <<" + str(decrypt.needed_encrypters_amount) +">> other person to decrypt the secret.")
             exit()
         print("Decrypting accumulated file...")
         decrypt.setUserPassword(args.master_password)

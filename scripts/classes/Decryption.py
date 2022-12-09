@@ -20,8 +20,8 @@ class Decryption(AbstractSplittedSecret):
         file.close()
         return data
     
-    def getNeededEncryptersAmount(self):
-        return len(str(list(self.user_data['groups'].keys())[0]))-1
+    def setNeededEncryptersAmount(self):
+        self.needed_encrypters_amount = len(str(list(self.user_data['groups'].keys())[0]))-1
     
     def decryptFile(self,password,input_file_path,output_file_path):
         self.executeCommand('gpg --batch --passphrase "'+ password + '" -o "' + output_file_path +'" "'+ input_file_path+'"')
@@ -35,6 +35,7 @@ class Decryption(AbstractSplittedSecret):
         output_file_path = self.getAccumulatedFilePath("decrypted")
         self.decryptFile(self.user_password, input_file_path, output_file_path)
         
-    def setUserData(self):
+    def initializeData(self):
         self.decryptUserFile()
         self.user_data = self.loadJsonFile(self.user_file_decrypted_path)
+        self.setNeededEncryptersAmount()

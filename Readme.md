@@ -36,6 +36,9 @@ python scripts/main.py --mode cleanup --user "1"  && python scripts/main.py --mo
 # setup
 ```bash 
     pip install numpy
+    gpg
+    python
+    pip
 ```
 
 ## Further Information
