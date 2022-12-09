@@ -24,7 +24,7 @@ class Cli(object):
         return self.output
     
     def getOutputString(self):
-        return str(' '.join(self.output))
+        return str('\n'.join(self.output))
 
     def getCommandString(self):
         return self.command

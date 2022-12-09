@@ -3,14 +3,12 @@ import string
 import math
 import numpy
 import re
-from .Cli import Cli
 from .AbstractSplittedSecret import AbstractSplittedSecret
 
-class Generate(AbstractSplittedSecret,Cli):
+class Generate(AbstractSplittedSecret):
     
     def __init__(self, amount_of_secret_holders, decryption_quota):
         super(Generate, self).__init__()
-        super(Cli, self).__init__()
         self.amount_of_secret_holders = amount_of_secret_holders
         self.decryption_quota = decryption_quota
         self.decrypted_master_password_file_path="data/decrypted/password_files/master-password.txt"

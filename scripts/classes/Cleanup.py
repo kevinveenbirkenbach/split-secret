@@ -1,7 +1,10 @@
 from .AbstractSplittedSecret import AbstractSplittedSecret
 class Cleanup(AbstractSplittedSecret):
     def __init__(self):
-        pass
+        super(Cleanup, self).__init__()
+    def deleteAllEncryptedFiles(self):
+        self.executeCommand('rm -v ' + self.encrypted_splitted_password_files_folder + '*')
+        print(self.getCommandString())
+        print(self.getOutputString())
     def deleteAll(self):
-        
-        pass
+        self.deleteAllEncryptedFiles()
