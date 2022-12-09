@@ -3,11 +3,11 @@
 
 import subprocess
 
-class Cli:
+class Cli():
     
     def __init__(self):
-        self.command = '';
-        self.output  = [];
+        self.command = ''
+        self.output  = []
         pass
     
     def executeCommand(self,command):
