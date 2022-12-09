@@ -1,5 +1,5 @@
 data/decrypted/splitted_password_files/*
 data/decrypted/password_files/*
 data/encrypted/splitted_password_files/*
-data/decrypted/password_files/*
+data/encrypted/password_files/*
 __pycache__
