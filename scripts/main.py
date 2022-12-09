@@ -39,11 +39,13 @@ if __name__ == '__main__':
                 decrypt.setUserPassword(getpass())
                 print("Decrypting User File...")
                 try:
-                    decrypt.decryptUserFile();
+                    decrypt.setUserData();
                     break;
                 except:
                     print("Wrong password :(")
-            print("File encrypted :) ")
+            print("File decrypted :) ")
+            print("Please contact ")
+            print(decrypt.user_data)
             exit()
         print("Decrypting accumulated file...")
         decrypt.setUserPassword(args.master_password)
