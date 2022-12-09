@@ -20,6 +20,10 @@ street in strasdlasöd
 END_OF_INPUTS
 python scripts/main.py --mode decrypt --master-password "ewrwerwerew"  &&
 python scripts/main.py --mode decrypt --user "1" 
+
+
+python scripts/main.py --mode cleanup --user "1"  && python scripts/main.py --mode decrypt --user "1" --user-password "O3ITMWXZED9FKYQ0PB2WNVRWSCSCYVXCD00PJ6GQ4MFPIUWBVDCYSSSX9ZDBW5QU"
+
 ```
 # Requirements to know
 - Amount of People

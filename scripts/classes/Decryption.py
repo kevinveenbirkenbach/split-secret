@@ -20,6 +20,9 @@ class Decryption(AbstractSplittedSecret):
         file.close()
         return data
     
+    def getNeededEncryptersAmount(self):
+        return len(str(list(self.user_data['groups'].keys())[0]))-1
+    
     def decryptFile(self,password,input_file_path,output_file_path):
         self.executeCommand('gpg --batch --passphrase "'+ password + '" -o "' + output_file_path +'" "'+ input_file_path+'"')
     

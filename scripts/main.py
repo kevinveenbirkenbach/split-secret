@@ -10,6 +10,7 @@ if __name__ == '__main__':
     parser.add_argument('--amount',type=int, dest='amount_of_secret_holders',required=False,choices=range(1,9))
     parser.add_argument('--quota', type=int, dest='decryption_quota', choices=range(1,101),required=False)
     parser.add_argument('--master-password',type=str, dest='master_password',required=False)
+    parser.add_argument('--user-password',type=str, dest='user_password',required=False)
     parser.add_argument('--user',type=int, dest='user',choices=range(1,9),required=False)
     parser.add_argument('--add-user-information',type=bool, dest='add_user_information', default=False, required=False, action=argparse.BooleanOptionalAction)
     args = parser.parse_args()
@@ -21,8 +22,10 @@ if __name__ == '__main__':
     if mode == 'cleanup':
         cleanup = Cleanup()
         if args.user is None: 
+            print("Delete all files.")
             cleanup.deleteAll()
             exit()
+        print("Delete files for user <<" + str(args.user) + ">>");
         cleanup.cleanupForUser(args.user)
         exit()
         
@@ -34,18 +37,31 @@ if __name__ == '__main__':
                 decrypt.setUserId(input())
             else:
                 decrypt.setUserId(args.user)
-            while True:
-                print("Please enter the user password:")
-                decrypt.setUserPassword(getpass())
+            if args.user_password is None:
+                while True:
+                    print("Please enter the user password:")
+                    decrypt.setUserPassword(getpass())
+                    print("Decrypting User File...")
+                    try:
+                        decrypt.setUserData();
+                        break;
+                    except:
+                        print("Wrong password :(")
+            else:
+                decrypt.setUserPassword(args.user_password)
                 print("Decrypting User File...")
                 try:
                     decrypt.setUserData();
-                    break;
                 except:
                     print("Wrong password :(")
-            print("File decrypted :) ")
-            print("Please contact ")
-            print(decrypt.user_data)
+                    exit()
+            print("File decrypted :) \n")
+            print("Please contact the following persons and tell them that you need help to encrypt the data: \n")
+            for contact_id in decrypt.user_data['contacts']:
+                print("user_id: " + contact_id)
+                for label in decrypt.user_data['contacts'][contact_id]:
+                    print(label + ": " + decrypt.user_data['contacts'][contact_id][label])
+            print("You need at least <<" + str(decrypt.getNeededEncryptersAmount()) +">> aditional people to decrypt the secret.")
             exit()
         print("Decrypting accumulated file...")
         decrypt.setUserPassword(args.master_password)
