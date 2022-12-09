@@ -23,15 +23,20 @@ if __name__ == '__main__':
         
     if args.mode == 'decrypt':
         decrypt = Decryption()
-        if args.user is None: 
-            print("Please type in the user number:")
-            decrypt.setUserId(input())
-        else:
-            decrypt.setUser(args.user)
-        print("Please enter the master password:")
-        decrypt.setUserPassword(getpass())
-        print("Decrypting User File...")
-        decrypt.decryptUserFile();
+        if args.master_password is None:
+            if args.user is None: 
+                print("Please type in the user number:")
+                decrypt.setUserId(input())
+            else:
+                decrypt.setUser(args.user)
+            print("Please enter the user password:")
+            decrypt.setUserPassword(getpass())
+            print("Decrypting User File...")
+            decrypt.decryptUserFile();
+            exit()
+        print("Decrypting accumulated file...")
+        decrypt.setUserPassword(args.master_password)
+        decrypt.decryptAccumulatedFile()
         exit()
     
     

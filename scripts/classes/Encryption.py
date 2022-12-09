@@ -31,14 +31,6 @@ class Encryption(AbstractSplittedSecret):
             start_number += str(self.amount_of_secret_holders)
             index += 1
         return int(start_number)
-
-    def savePassword(self,password,password_file_path):
-        print("Saving password to: " + password_file_path)
-        master_password_file = open(password_file_path, "a")
-        master_password_file.seek(0)
-        master_password_file.truncate()
-        master_password_file.write(password)
-        master_password_file.close()
     
     def createPassword(self,length):
         characters = string.ascii_letters + string.digits
@@ -85,7 +77,6 @@ class Encryption(AbstractSplittedSecret):
             
     def encryptStringToFile(self,text,output_file,password):
         self.executeCommand('echo \'' + text + '\' | gpg --symmetric --armor --batch --passphrase "' + password + '" -o "' + output_file + '"')
-        print(self.getCommandString())
     
     def generateEncryptedGroupFiles(self):
         for password_group_index_int in self.group_mapped_data:

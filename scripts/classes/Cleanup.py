@@ -14,8 +14,6 @@ class Cleanup(AbstractSplittedSecret):
     def deleteAllFilesInFolder(self,folder_path):
         try:
             self.executeCommand('rm -v ' + folder_path + '*')
-            print(self.getCommandString())
-            print(self.getOutputString())
         except:
             pass    
     
@@ -28,10 +26,7 @@ class Cleanup(AbstractSplittedSecret):
             self.deleteAllFilesInFolder(folder_path)
             
     def cleanupForUser(self,user):
-        self.executeCommand('find "' + self.getFolderPath("encrypted") + '" -not -name "*' + str(user) +'*" -type f -print | xargs rm -v')
-        print(self.getCommandString())
-        print(self.getOutputString())
-        
+        self.executeCommand('find "' + self.getFolderPath("encrypted") + '" -not -name "*' + str(user) +'*" -type f -print | xargs rm -v')    
 
     def deleteAll(self):
         self.deleteAllFiles("encrypted")

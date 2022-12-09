@@ -1,6 +1,12 @@
 # Splitted Secret
 The purpose of this software is to splitt a secret over multiple people. Just if a defined amount of this people meet together they can encrypt the secret and have access to it. 
 
+# testing
+```bash 
+python scripts/main.py --mode cleanup && 
+python scripts/main.py --amount 6 --quota 50 --mode generate --master-password "ewrwerwerew" && 
+python scripts/main.py --mode decrypt --master-password "ewrwerwerew" 
+```
 # Requirements to know
 - Amount of People
 - How much people need to reunite for decrypting

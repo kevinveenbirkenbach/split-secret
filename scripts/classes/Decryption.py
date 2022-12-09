@@ -14,11 +14,13 @@ class Decryption(AbstractSplittedSecret):
     
     def decryptFile(self,password,input_file_path,output_file_path):
         self.executeCommand('gpg --batch --passphrase "'+ password + '" -o "' + output_file_path +'" "'+ input_file_path+'"')
-        print(self.getCommandString())
-        print(self.getOutputString())
     
     def decryptUserFile(self):
         input_file_path = self.getUserFilePath(self.user_id,"encrypted")
         output_file_path = self.getUserFilePath(self.user_id,"decrypted")
-        self.decryptFile(self.user_password, input_file_path,output_file_path)
+        self.decryptFile(self.user_password, input_file_path, output_file_path)
         
+    def decryptAccumulatedFile(self):
+        input_file_path = self.getAccumulatedFilePath("encrypted")
+        output_file_path = self.getAccumulatedFilePath("decrypted")
+        self.decryptFile(self.user_password, input_file_path, output_file_path)
