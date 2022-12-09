@@ -15,6 +15,21 @@ class Encryption(AbstractSplittedSecret):
         self.master_password = master_password
         self.quota_factor=self.decryption_quota/100
         self.group_members_amount=math.ceil(self.amount_of_secret_holders * self.quota_factor)
+        self.initializeUserData()
+        self.initializeGroupData()
+        
+    def initializeUserData(self):
+        self.user_mapped_data = {}
+        user_count = 1
+        while user_count <= self.amount_of_secret_holders:
+            self.user_mapped_data[str(user_count)] = {"groups":{},"user_password":self.createPassword(64),"about":{}}
+            user_count += 1;
+    
+    def initializeGroupData(self):
+        self.group_mapped_data = {} 
+
+    def addInformationToUser(self,user_id,label,content):
+        self.user_mapped_data[user_id]['about'][label] = content;
         
     def getStartnumber(self):
         index = 0
@@ -42,19 +57,18 @@ class Encryption(AbstractSplittedSecret):
         unvalid_sequenz = re.compile("(.)\\1+")
         return re.search(valid_numbers, password_group_index_str) and not re.search(unvalid_sequenz, password_group_index_str)
     
-    def createUserDataFrame(self):
-        self.user_mapped_data = {}
-        user_count = 1
-        while user_count <= self.amount_of_secret_holders:
-            self.user_mapped_data[str(user_count)] = {"groups":{},"user_password":self.createPassword(64)}
-            user_count += 1;
-    
-    def createGroupDataFrame(self):
-        self.group_mapped_data = {} 
+    def compileContacts(self):
+        contacts = {}
+        for user_id in self.user_mapped_data:
+            contacts[user_id] = self.user_mapped_data[user_id]['about']
+        for user_id in self.user_mapped_data:
+            self.user_mapped_data[user_id]['contacts'] = {}
+            for contact_id in contacts:
+                if contact_id != user_id:
+                    self.user_mapped_data[user_id]['contacts'][contact_id] = contacts[contact_id]
         
-    def generateData(self):
-        self.createUserDataFrame()
-        self.createGroupDataFrame()
+    def compileData(self):
+        self.compileContacts()
         index = self.getStartnumber()
         while index < self.getEndnumber():
             password_group_index_str = ''.join(sorted(str(index)))
@@ -89,7 +103,7 @@ class Encryption(AbstractSplittedSecret):
     def encryptUserData(self):
         for user_id in self.user_mapped_data:
             file_path=self.getUserFilePath(user_id,"encrypted")
-            data=self.user_mapped_data[user_id]['groups']
+            data=self.user_mapped_data[user_id]
             password=self.user_mapped_data[user_id]['user_password']
             self.encryptToJsonFile(data,file_path,password)
             

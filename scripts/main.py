@@ -11,6 +11,7 @@ if __name__ == '__main__':
     parser.add_argument('--quota', type=int, dest='decryption_quota', choices=range(1,101),required=False)
     parser.add_argument('--master-password',type=str, dest='master_password',required=False)
     parser.add_argument('--user',type=int, dest='user',choices=range(1,9),required=False)
+    parser.add_argument('--add-user-information',type=bool, dest='add_user_information', default=False, required=False, action=argparse.BooleanOptionalAction)
     args = parser.parse_args()
     mode = args.mode
     
@@ -56,6 +57,11 @@ if __name__ == '__main__':
         else:
             master_password = args.master_password
         encrypt = Encryption(args.amount_of_secret_holders, args.decryption_quota, master_password)
-        encrypt.generateData()
+        if args.add_user_information is not None:
+            for user_id in encrypt.user_mapped_data:
+                for label in ['name','phone','email','address']:
+                    print("Please enter attribut <<" + label + ">> for user <<" + user_id+ ">>:" )
+                    encrypt.addInformationToUser(user_id, label, str(input()))
+        encrypt.compileData()
         encrypt.encrypt()
         exit()
