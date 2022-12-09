@@ -3,7 +3,7 @@
 
 import subprocess
 
-class Cli():
+class Cli(object):
     
     def __init__(self):
         self.command = ''
