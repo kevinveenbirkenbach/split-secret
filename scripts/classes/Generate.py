@@ -39,7 +39,7 @@ class Generate(AbstractSplittedSecret):
         master_password_file.write(password)
         master_password_file.close()
     
-    def getPassword(self):
+    def createPassword(self):
         characters = string.ascii_letters + string.digits
         return ''.join(random.choice(characters) for i in range(int(64*self.quota_factor))).upper()
     
@@ -49,28 +49,50 @@ class Generate(AbstractSplittedSecret):
         unvalid_sequenz = re.compile("(.)\\1+")
         return re.search(valid_numbers, password_group_index_str) and not re.search(unvalid_sequenz, password_group_index_str)
     
-    def execute(self):
+    def createUserMappedDataFrame(self):
+        self.user_mapped_data = {}
+        user_count = 1
+        while user_count <= self.amount_of_secret_holders:
+            self.user_mapped_data[str(user_count)] = {}
+            user_count += 1;
+    
+    def createGroupMappedDataFrame(self):
+        self.group_mapped_data = {} 
+        
+    def generateMappedData(self):
+        self.createUserMappedDataFrame()
+        self.createGroupMappedDataFrame()
         index = self.getStartnumber()
-        password_groups = {}
         while index < self.getEndnumber():
             password_group_index_str = ''.join(sorted(str(index)))
             if self.isGroupValid(password_group_index_str):
                 password_group_index_int = int(password_group_index_str)
-                if not password_group_index_int in password_groups:
-                    password_index = 1
-                    password_groups[password_group_index_int] = {}
-                    password_groups[password_group_index_int]['members'] = {}
-                    password_groups[password_group_index_int]['password'] = '' 
+                if not password_group_index_int in self.group_mapped_data:
+                    self.group_mapped_data[password_group_index_int] = {}
+                    self.group_mapped_data[password_group_index_int]['members'] = {}
+                    self.group_mapped_data[password_group_index_int]['password'] = '' 
                     password = ''
                     for secret_holder_index in password_group_index_str:
-                        password_groups[password_group_index_int]['members'][secret_holder_index]={}
-                        password_part = self.getPassword()
-                        password_groups[password_group_index_int]['members'][secret_holder_index]['password_part'] = password_part
-                        password_groups[password_group_index_int]['members'][secret_holder_index]['password_index'] = password_index
+                        self.group_mapped_data[password_group_index_int]['members'][secret_holder_index]={}
+                        password_part = self.createPassword()
+                        self.group_mapped_data[password_group_index_int]['members'][secret_holder_index] = password_part
                         password += password_part
-                        password_index += 1
-                    password_groups[password_group_index_int]['password'] += password
-                    encrypted_splitted_password_file = AbstractSplittedSecret().encrypted_splitted_password_files_folder + password_group_index_str + ".txt.gpg"
-                    self.executeCommand('gpg --batch --passphrase "' + password + '" -o "' + encrypted_splitted_password_file + '" -c "' + self.decrypted_master_password_file_path  + '"')
-                    print(self.getCommandString())
+                        self.user_mapped_data[secret_holder_index][password_group_index_str] = password_part
+                    self.group_mapped_data[password_group_index_int]['password'] += password
             index += 1
+            
+    def generateGroupFiles(self):
+        for password_group_index_int in self.group_mapped_data:
+            encrypted_splitted_password_file = AbstractSplittedSecret().encrypted_splitted_password_files_folder + str(password_group_index_int) + ".txt.gpg"
+            self.executeCommand('gpg --batch --passphrase "' + self.group_mapped_data[password_group_index_int]['password'] + '" -o "' + encrypted_splitted_password_file + '" -c "' + self.decrypted_master_password_file_path  + '"')
+            print(self.getCommandString())
+            
+    def execute(self):
+        self.generateMappedData()
+        self.generateGroupFiles()
+    
+    def getUserMappedData(self):
+        return self.user_mapped_data
+    
+    def getGroupMappedData(self):
+        return self.group_mapped_data
