@@ -4,8 +4,9 @@ The purpose of this software is to splitt a secret over multiple people. Just if
 # testing
 ```bash 
 python scripts/main.py --mode cleanup && 
-python scripts/main.py --amount 6 --quota 50 --mode generate --master-password "ewrwerwerew" && 
-python scripts/main.py --mode decrypt --master-password "ewrwerwerew" 
+python scripts/main.py --amount 6 --quota 50 --mode encrypt --master-password "ewrwerwerew" && 
+python scripts/main.py --mode decrypt --master-password "ewrwerwerew"  &&
+python scripts/main.py --mode decrypt --user "1" 
 ```
 # Requirements to know
 - Amount of People

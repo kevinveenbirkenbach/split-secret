@@ -42,19 +42,19 @@ class Encryption(AbstractSplittedSecret):
         unvalid_sequenz = re.compile("(.)\\1+")
         return re.search(valid_numbers, password_group_index_str) and not re.search(unvalid_sequenz, password_group_index_str)
     
-    def createUserMappedDataFrame(self):
+    def createUserDataFrame(self):
         self.user_mapped_data = {}
         user_count = 1
         while user_count <= self.amount_of_secret_holders:
             self.user_mapped_data[str(user_count)] = {"groups":{},"user_password":self.createPassword(64)}
             user_count += 1;
     
-    def createGroupMappedDataFrame(self):
+    def createGroupDataFrame(self):
         self.group_mapped_data = {} 
         
-    def generateMappedData(self):
-        self.createUserMappedDataFrame()
-        self.createGroupMappedDataFrame()
+    def generateData(self):
+        self.createUserDataFrame()
+        self.createGroupDataFrame()
         index = self.getStartnumber()
         while index < self.getEndnumber():
             password_group_index_str = ''.join(sorted(str(index)))
@@ -78,7 +78,7 @@ class Encryption(AbstractSplittedSecret):
     def encryptStringToFile(self,text,output_file,password):
         self.executeCommand('echo \'' + text + '\' | gpg --symmetric --armor --batch --passphrase "' + password + '" -o "' + output_file + '"')
     
-    def generateEncryptedGroupFiles(self):
+    def encryptGroupFiles(self):
         for password_group_index_int in self.group_mapped_data:
             encrypted_group_password_file_path = self.getGroupFilePath(password_group_index_int,"encrypted")
             self.encryptStringToFile(self.master_password,encrypted_group_password_file_path,self.group_mapped_data[password_group_index_int]['password'])
@@ -86,38 +86,19 @@ class Encryption(AbstractSplittedSecret):
     def encryptToJsonFile(self,data,file_path,password):
         self.encryptStringToFile(json.dumps(data,ensure_ascii=False), file_path, password)
         
-    def encryptUserMappedData(self):
+    def encryptUserData(self):
         for user_id in self.user_mapped_data:
             file_path=self.getUserFilePath(user_id,"encrypted")
             data=self.user_mapped_data[user_id]['groups']
             password=self.user_mapped_data[user_id]['user_password']
             self.encryptToJsonFile(data,file_path,password)
             
-    def encryptAccumulatedMappedData(self):
+    def encryptAccumulatedData(self):
         file_path=self.getAccumulatedFilePath("encrypted")
         data={"user_mapped": self.user_mapped_data, "group_mapped": self.group_mapped_data}
         self.encryptToJsonFile(data,file_path,self.master_password)
     
-    def saveMappedData(self):
-        self.encryptUserMappedData()
-        self.encryptAccumulatedMappedData()
-    
-    def encryptMappedUserData(self):
-        self.user_passwords = {}
-        for user_id in self.user_mapped_data:
-            self.user_passwords[user_id] = self.createPassword(64)
-
-    def encryptMappedData(self):
-        self.encryptMappedUserData()
-        
-    def generate(self):
-        self.generateMappedData()
-        self.saveMappedData()
-        self.encryptMappedData()
-        self.generateEncryptedGroupFiles()
-    
-    def getUserMappedData(self):
-        return self.user_mapped_data
-    
-    def getGroupMappedData(self):
-        return self.group_mapped_data
+    def encrypt(self):
+        self.encryptUserData()
+        self.encryptAccumulatedData()
+        self.encryptGroupFiles()
