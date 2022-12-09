@@ -9,10 +9,10 @@ The purpose of this software is to splitt a secret over multiple people. Just if
 - Plattform independend
 - easy to use
 
-
-pip install numpy
-
-gpg -c
+# setup
+```bash 
+    pip install numpy
+```
 
 ## Further Information
 - https://www.tutorialspoint.com/python/python_command_line_arguments.htm

@@ -4,28 +4,7 @@ import string
 import math
 import numpy
 import re
-import subprocess
-
-def bash(command):
-    print(command)
-    process = subprocess.Popen([command], stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
-    out, err = process.communicate()
-    stdout = out.splitlines()
-    output = []
-    for line in stdout:
-        output.append(line.decode("utf-8"))
-    if process.wait() > bool(0):
-        print(command, out, err)
-        raise Exception("Exitcode is greater then 0")
-    return output
-
-def list_to_string(list):
-    return str(' '.join(list))
-
-def print_bash(command):
-    output = bash(command)
-    print(list_to_string(output))
-    return output
+from classes.Cli import Cli
 
 def getPassword():
     characters = string.ascii_letters + string.digits
@@ -56,23 +35,22 @@ def savePassword(password,password_file_path):
     master_password_file.close()
 
 if __name__ == '__main__':
-    master_password_file_path="data/master-password.txt"
+    cli = Cli()
+    decrypted_master_password_file_path="data/decrypted/password_files/master-password.txt"
 
     parser = argparse.ArgumentParser()
     parser.add_argument('-a', '--amount',type=int, dest='amount_of_secret_holders',required=True,choices=range(1,9))
     parser.add_argument('-q', '--quota', type=int, dest='decryption_quota', choices=range(1,101),required=True)
-    parser.add_argument('-p', '--master-password', type=str, dest='master_password', required=False)
+    #parser.add_argument('-p', '--master-password', type=str, dest='master_password', required=False)
     args = parser.parse_args()
     amount_of_secret_holders = args.amount_of_secret_holders
-    master_password = args.master_password
+    #master_password = args.master_password
     decryption_quota = args.decryption_quota
     
-    savePassword(master_password,master_password_file_path)
+    #savePassword(master_password,decrypted_master_password_file_path)
     
     quota_factor=decryption_quota/100
     group_members_amount=math.ceil(amount_of_secret_holders * quota_factor)
-    amount_of_partner_secrets=(amount_of_secret_holders * group_members_amount)
-    maximum_posible_combinations=amount_of_secret_holders*amount_of_secret_holders
     width= range(1,(amount_of_secret_holders+1))
     regex="([" + ','.join([str(x) for x in width]) + "]{" + str(group_members_amount) + "})"
     valid_numbers = re.compile(regex)
@@ -97,8 +75,10 @@ if __name__ == '__main__':
                     password += password_part
                     password_index += 1
                 password_groups[password_group_index_int]['password'] += password
-                splitted_password_file = "data/" + password_group_index_str + ".splitted_password_file.txt"
-                print_bash('cp -v "' + master_password_file_path + '" "' + splitted_password_file + '" && gpg --batch --passphrase "' + password + '" -c "' + splitted_password_file +'"')
+                decrypted_splitted_password_file = "data/decrypted/splitted_password_files/" + password_group_index_str + ".txt"
+                encrypted_splitted_password_file = "data/encrypted/splitted_password_files/" + password_group_index_str + ".txt.gpg"
+                cli.executeCommand('cp -v "' + decrypted_master_password_file_path + '" "' + decrypted_splitted_password_file + '" && gpg --batch --passphrase "' + password + '" -c "' + decrypted_splitted_password_file   + '"')
+                print(cli.getCommandString())
         index += 1
     print(password_groups)
 
