@@ -3,17 +3,19 @@ import string
 import math
 import numpy
 import re
-import classes.Cli as Cli
+from .Cli import Cli
+from .AbstractSplittedSecret import AbstractSplittedSecret
 
-class Generate:
+class Generate(AbstractSplittedSecret,Cli):
     
     def __init__(self, amount_of_secret_holders, decryption_quota):
+        super(Generate, self).__init__()
+        super(Cli, self).__init__()
         self.amount_of_secret_holders = amount_of_secret_holders
         self.decryption_quota = decryption_quota
         self.decrypted_master_password_file_path="data/decrypted/password_files/master-password.txt"
         self.quota_factor=self.decryption_quota/100
         self.group_members_amount=math.ceil(self.amount_of_secret_holders * self.quota_factor)
-        self.cli = Cli.Cli()
         
     def getStartnumber(self):
         index = 0
@@ -44,9 +46,8 @@ class Generate:
         return ''.join(random.choice(characters) for i in range(int(64*self.quota_factor))).upper()
     
     def isGroupValid(self,password_group_index_str):
-        width= range(1,(self.amount_of_secret_holders+1))
-        regex="([" + ','.join([str(x) for x in width]) + "]{" + str(self.group_members_amount) + "})"
-        valid_numbers = re.compile(regex)
+        secret_stakeholders_range=range(1,(self.amount_of_secret_holders+1))
+        valid_numbers = re.compile("([" + ','.join([str(x) for x in secret_stakeholders_range]) + "]{" + str(self.group_members_amount) + "})")
         unvalid_sequenz = re.compile("(.)\\1+")
         return re.search(valid_numbers, password_group_index_str) and not re.search(unvalid_sequenz, password_group_index_str)
     
@@ -71,8 +72,7 @@ class Generate:
                         password += password_part
                         password_index += 1
                     password_groups[password_group_index_int]['password'] += password
-                    decrypted_splitted_password_file = "data/decrypted/splitted_password_files/" + password_group_index_str + ".txt"
-                    encrypted_splitted_password_file = "data/encrypted/splitted_password_files/" + password_group_index_str + ".txt.gpg"
-                    self.cli.executeCommand('cp -v "' + self.decrypted_master_password_file_path + '" "' + decrypted_splitted_password_file + '" && gpg --batch --passphrase "' + password + '" -c "' + decrypted_splitted_password_file   + '"')
-                    print(self.cli.getCommandString())
+                    encrypted_splitted_password_file = AbstractSplittedSecret().encrypted_splitted_password_files_folder + password_group_index_str + ".txt.gpg"
+                    self.executeCommand('gpg --batch --passphrase "' + password + '" -o "' + encrypted_splitted_password_file + '" -c "' + self.decrypted_master_password_file_path  + '"')
+                    print(self.getCommandString())
             index += 1
