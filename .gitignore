@@ -1,5 +1,6 @@
-data/decrypted/splitted_password_files/*
-data/decrypted/password_files/*
-data/encrypted/splitted_password_files/*
-data/encrypted/password_files/*
+data/decrypted/group_files/*
+data/decrypted/user_files/*
+data/encrypted/group_files/*
+data/encrypted/user_files/*
+accumulated.json*
 __pycache__
