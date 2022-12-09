@@ -20,6 +20,12 @@ class Cleanup(AbstractSplittedSecret):
     def deleteAllEncryptedFiles(self):
         for folder_path in self.encrypted_files_folders:
             self.deleteAllFilesInFolder(folder_path)
+            
+    def cleanupForUser(self,user):
+        self.executeCommand('find "' + self.encrypted_folder + '" -not -name "*' + str(user) +'*" -type f -print | xargs rm -v')
+        print(self.getCommandString())
+        print(self.getOutputString())
+        
 
     def deleteAll(self):
         self.deleteAllEncryptedFiles()

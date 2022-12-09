@@ -9,12 +9,15 @@ if __name__ == '__main__':
     parser.add_argument('--amount',type=int, dest='amount_of_secret_holders',required=False,choices=range(1,9))
     parser.add_argument('--quota', type=int, dest='decryption_quota', choices=range(1,101),required=False)
     parser.add_argument('--master-password',type=str, dest='master_password',required=False)
+    parser.add_argument('--user',type=int, dest='user',choices=range(1,9),required=False)
     args = parser.parse_args()
     
     if args.mode == 'cleanup':
         cleanup = Cleanup()
-        cleanup.deleteAll()
-        exit()
+        if args.user is None: 
+            cleanup.deleteAll()
+            exit()
+        cleanup.cleanupForUser(args.user)
         
     if args.mode == 'generate':
         if args.master_password is None:
