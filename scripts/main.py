@@ -25,11 +25,13 @@ if __name__ == '__main__':
         decrypt = Decryption()
         if args.user is None: 
             print("Please type in the user number:")
-            decrypt.setUser(int(input()))
+            decrypt.setUserId(input())
         else:
             decrypt.setUser(args.user)
         print("Please enter the master password:")
-        user_password = getpass()
+        decrypt.setUserPassword(getpass())
+        print("Decrypting User File...")
+        decrypt.decryptUserFile();
         exit()
     
     

@@ -17,8 +17,8 @@ class AbstractSplittedSecret(Cli):
     
     def getFileExtension(self,file_type):
         if file_type == "encrypted":
-            return ''
-        return '.gpg'
+            return '.gpg'
+        return ''
     
     def getUserFilePath(self,user_id,file_type):
         return self.getUserFilesFolderPath(file_type)+user_id+'.json' + self.getFileExtension(file_type);
