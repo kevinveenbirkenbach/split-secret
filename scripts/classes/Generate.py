@@ -14,6 +14,7 @@ class Generate:
         self.quota_factor=self.decryption_quota/100
         self.group_members_amount=math.ceil(self.amount_of_secret_holders * self.quota_factor)
         self.cli = Cli.Cli()
+        
     def getStartnumber(self):
         index = 0
         start_number = ''
@@ -37,23 +38,24 @@ class Generate:
         master_password_file.truncate()
         master_password_file.write(password)
         master_password_file.close()
-
     
     def getPassword(self):
         characters = string.ascii_letters + string.digits
         return ''.join(random.choice(characters) for i in range(int(64*self.quota_factor))).upper()
     
-    def execute(self):
-        
+    def isGroupValid(self,password_group_index_str):
         width= range(1,(self.amount_of_secret_holders+1))
         regex="([" + ','.join([str(x) for x in width]) + "]{" + str(self.group_members_amount) + "})"
         valid_numbers = re.compile(regex)
         unvalid_sequenz = re.compile("(.)\\1+")
+        return re.search(valid_numbers, password_group_index_str) and not re.search(unvalid_sequenz, password_group_index_str)
+    
+    def execute(self):
         index = self.getStartnumber()
         password_groups = {}
         while index < self.getEndnumber():
             password_group_index_str = ''.join(sorted(str(index)))
-            if re.search(valid_numbers, password_group_index_str) and not re.search(unvalid_sequenz, password_group_index_str):
+            if self.isGroupValid(password_group_index_str):
                 password_group_index_int = int(password_group_index_str)
                 if not password_group_index_int in password_groups:
                     password_index = 1
