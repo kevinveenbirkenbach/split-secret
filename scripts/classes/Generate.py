@@ -3,15 +3,16 @@ import string
 import math
 import numpy
 import re
+import json
 from .AbstractSplittedSecret import AbstractSplittedSecret
 
 class Generate(AbstractSplittedSecret):
     
-    def __init__(self, amount_of_secret_holders, decryption_quota):
+    def __init__(self, amount_of_secret_holders, decryption_quota,master_password):
         super(Generate, self).__init__()
         self.amount_of_secret_holders = amount_of_secret_holders
         self.decryption_quota = decryption_quota
-        self.decrypted_master_password_file_path="data/decrypted/password_files/master-password.txt"
+        self.master_password = master_password
         self.quota_factor=self.decryption_quota/100
         self.group_members_amount=math.ceil(self.amount_of_secret_holders * self.quota_factor)
         
@@ -81,15 +82,33 @@ class Generate(AbstractSplittedSecret):
                     self.group_mapped_data[password_group_index_int]['password'] += password
             index += 1
             
-    def generateGroupFiles(self):
+    def generateEncryptedGroupFiles(self):
         for password_group_index_int in self.group_mapped_data:
             encrypted_splitted_password_file = AbstractSplittedSecret().encrypted_splitted_password_files_folder + str(password_group_index_int) + ".txt.gpg"
-            self.executeCommand('gpg --batch --passphrase "' + self.group_mapped_data[password_group_index_int]['password'] + '" -o "' + encrypted_splitted_password_file + '" -c "' + self.decrypted_master_password_file_path  + '"')
+            self.executeCommand('echo "' + self.master_password + '" | gpg --symmetric --armor --batch --passphrase "' + self.group_mapped_data[password_group_index_int]['password'] + '" -o "' + encrypted_splitted_password_file + '"')
             print(self.getCommandString())
+    
+    def saveJsonFile(self,file_path,data):
+        with open(file_path, 'w', encoding='utf-8') as file:
+            json.dump(data, file, ensure_ascii=False, indent=4)
             
-    def execute(self):
+    def saveUserMappedData(self):
+        for user_id in self.user_mapped_data:
+            file_path=self.decrypted_password_files_folder+user_id+'.json'
+            self.saveJsonFile(file_path, self.user_mapped_data[user_id])
+            
+    def saveGroupMappedData(self):
+        file_path=self.decrypted_password_files_folder+'group_mapped.json'
+        self.saveJsonFile(file_path, self.group_mapped_data)
+    
+    def saveMappedData(self):
+        self.saveUserMappedData()
+        self.saveGroupMappedData();
+        
+    def generate(self):
         self.generateMappedData()
-        self.generateGroupFiles()
+        self.saveMappedData()
+        self.generateEncryptedGroupFiles()
     
     def getUserMappedData(self):
         return self.user_mapped_data
