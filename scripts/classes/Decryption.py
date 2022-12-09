@@ -1,5 +1,5 @@
 from .AbstractSplittedSecret import AbstractSplittedSecret
-class Decrypt(AbstractSplittedSecret):
+class Decryption(AbstractSplittedSecret):
     
     def __init__(self):
         self.user_id='0';

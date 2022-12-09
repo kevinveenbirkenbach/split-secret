@@ -1,7 +1,7 @@
 import argparse
-from classes.Generate import Generate
+from classes.Encryption import Encryption
 from classes.Cleanup import Cleanup
-from classes.Decrypt import Decrypt
+from classes.Decryption import Decryption
 from getpass import getpass
 
 if __name__ == '__main__':
@@ -22,7 +22,7 @@ if __name__ == '__main__':
         exit()
         
     if args.mode == 'decrypt':
-        decrypt = Decrypt()
+        decrypt = Decryption()
         if args.user is None: 
             print("Please type in the user number:")
             decrypt.setUser(int(input()))
@@ -39,6 +39,6 @@ if __name__ == '__main__':
             master_password = getpass()
         else:
             master_password = args.master_password
-        generate = Generate(args.amount_of_secret_holders, args.decryption_quota,master_password)
+        generate = Encryption(args.amount_of_secret_holders, args.decryption_quota,master_password)
         generate.generate()
         exit()

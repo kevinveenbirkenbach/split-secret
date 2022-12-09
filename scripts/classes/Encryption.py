@@ -6,10 +6,10 @@ import re
 import json
 from .AbstractSplittedSecret import AbstractSplittedSecret
 
-class Generate(AbstractSplittedSecret):
+class Encryption(AbstractSplittedSecret):
     
     def __init__(self, amount_of_secret_holders, decryption_quota,master_password):
-        super(Generate, self).__init__()
+        super(Encryption, self).__init__()
         self.amount_of_secret_holders = amount_of_secret_holders
         self.decryption_quota = decryption_quota
         self.master_password = master_password
