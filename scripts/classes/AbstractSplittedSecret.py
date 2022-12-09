@@ -1,11 +1,30 @@
 from .Cli import Cli
 
 class AbstractSplittedSecret(Cli):
+    
     def __init__(self):
         super(Cli, self).__init__()
-        self.encrypted_folder="data/encrypted/"
-        self.decrypted_folder="data/encrypted/"
-        self.encrypted_group_files_folder = self.encrypted_folder + "group_files/"
-        self.decrypted_group_files_folder = self.decrypted_folder + "group_files/"
-        self.encrypted_user_files_folder = self.encrypted_folder + "user_files/"
-        self.decrypted_user_files_folder = self.encrypted_folder + "user_files/"
+        self.data_folder = "data/"
+    
+    def getFolderPath(self,folder_type):
+        return self.data_folder + folder_type + "/"
+    
+    def getGroupFilesFolderPath(self,folder_type):
+        return self.getFolderPath(folder_type) + "group_files/"
+    
+    def getUserFilesFolderPath(self,folder_type):
+        return self.getFolderPath(folder_type) + "user_files/"
+    
+    def getFileExtension(self,file_type):
+        if file_type == "encrypted":
+            return ''
+        return '.gpg'
+    
+    def getUserFilePath(self,user_id,file_type):
+        return self.getUserFilesFolderPath(file_type)+user_id+'.json' + self.getFileExtension(file_type);
+    
+    def getGroupFilePath(self,group_id,file_type):
+        return self.getGroupFilesFolderPath(file_type) + str(group_id) + '.txt' + self.getFileExtension(file_type);
+    
+    def getAccumulatedFilePath(self,file_type):
+        return self.getFolderPath(file_type) + 'accumulated.json' + self.getFileExtension(file_type);

@@ -84,24 +84,26 @@ class Generate(AbstractSplittedSecret):
             index += 1
             
     def encryptStringToFile(self,text,output_file,password):
-        self.executeCommand('echo \'' + text + '\' | gpg --symmetric --armor --batch --passphrase "' + password + '" -o "' + output_file + '.gpg"')
+        self.executeCommand('echo \'' + text + '\' | gpg --symmetric --armor --batch --passphrase "' + password + '" -o "' + output_file + '"')
         print(self.getCommandString())
     
     def generateEncryptedGroupFiles(self):
         for password_group_index_int in self.group_mapped_data:
-            encrypted_splitted_password_file = AbstractSplittedSecret().encrypted_group_files_folder + str(password_group_index_int) + ".txt"
-            self.encryptStringToFile(self.master_password,encrypted_splitted_password_file,self.group_mapped_data[password_group_index_int]['password'])
+            encrypted_group_password_file_path = self.getGroupFilePath(password_group_index_int,"encrypted")
+            self.encryptStringToFile(self.master_password,encrypted_group_password_file_path,self.group_mapped_data[password_group_index_int]['password'])
     
     def encryptToJsonFile(self,data,file_path,password):
         self.encryptStringToFile(json.dumps(data,ensure_ascii=False), file_path, password)
         
     def encryptUserMappedData(self):
         for user_id in self.user_mapped_data:
-            file_path=self.encrypted_user_files_folder+user_id+'.json'
-            self.encryptToJsonFile(self.user_mapped_data[user_id]['groups'],file_path,self.user_mapped_data[user_id]['user_password'])
+            file_path=self.getUserFilePath(user_id,"encrypted")
+            data=self.user_mapped_data[user_id]['groups']
+            password=self.user_mapped_data[user_id]['user_password']
+            self.encryptToJsonFile(data,file_path,password)
             
     def encryptAccumulatedMappedData(self):
-        file_path=self.encrypted_folder+'accumulated.json'
+        file_path=self.getAccumulatedFilePath("encrypted")
         data={"user_mapped": self.user_mapped_data, "group_mapped": self.group_mapped_data}
         self.encryptToJsonFile(data,file_path,self.master_password)
     

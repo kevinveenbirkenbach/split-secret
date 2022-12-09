@@ -1,9 +1,15 @@
 from .AbstractSplittedSecret import AbstractSplittedSecret
 class Cleanup(AbstractSplittedSecret):
+    
     def __init__(self):
         super(Cleanup, self).__init__()
-        self.encrypted_files_folders = [self.decrypted_group_files_folder,self.decrypted_user_files_folder]
-        self.decrypted_files_folders = [self.encrypted_group_files_folder,self.encrypted_user_files_folder]
+        
+    def getAllFilePaths(self,file_type):
+        return [
+            self.getGroupFilesFolderPath(file_type),
+            self.getUserFilesFolderPath(file_type),
+            self.getAccumulatedFilePath(file_type)
+            ]
     
     def deleteAllFilesInFolder(self,folder_path):
         try:
@@ -13,8 +19,8 @@ class Cleanup(AbstractSplittedSecret):
         except:
             pass    
     
-    def deleteAllDecryptedFiles(self):
-        for folder_path in self.decrypted_files_folders:
+    def deleteAllFiles(self,file_type):
+        for folder_path in self.getAllFilePaths(file_type):
             self.deleteAllFilesInFolder(folder_path)
         
     def deleteAllEncryptedFiles(self):
@@ -22,11 +28,11 @@ class Cleanup(AbstractSplittedSecret):
             self.deleteAllFilesInFolder(folder_path)
             
     def cleanupForUser(self,user):
-        self.executeCommand('find "' + self.encrypted_folder + '" -not -name "*' + str(user) +'*" -type f -print | xargs rm -v')
+        self.executeCommand('find "' + self.getFolderPath("encrypted") + '" -not -name "*' + str(user) +'*" -type f -print | xargs rm -v')
         print(self.getCommandString())
         print(self.getOutputString())
         
 
     def deleteAll(self):
-        self.deleteAllEncryptedFiles()
-        self.deleteAllDecryptedFiles()
+        self.deleteAllFiles("encrypted")
+        self.deleteAllFiles("decrypted")
