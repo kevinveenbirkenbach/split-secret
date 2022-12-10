@@ -2,16 +2,6 @@ import os
 
 class Paths():
     
-    # At the moment the programm can only deal with one digit numbers. 
-    MAXIMUM_SECRET_HOLDERS = 9
-    MINIMUM_SECRET_HOLDERS = 2
-    
-    def getCoSecretHoldersRange():
-        return range(Paths.MINIMUM_SECRET_HOLDERS,Paths.MAXIMUM_SECRET_HOLDERS)
-
-    def getSecretHoldersRange():
-        return range(1,Paths.MAXIMUM_SECRET_HOLDERS)
-    
     TYPE_ENCRYPTED="encrypted"
     TYPE_DECRYPTED="decrypted" 
     

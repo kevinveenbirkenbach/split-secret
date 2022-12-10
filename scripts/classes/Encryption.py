@@ -11,6 +11,10 @@ class Encryption():
     USER_PASSWORD_LENGTHS = 64
     OVERALL_PASSWORD_LENGTHS = 128
     
+    # At the moment the programm can only deal with one digit numbers. 
+    MAXIMUM_SECRET_HOLDERS = 9
+    MINIMUM_SECRET_HOLDERS = 2
+    
     def __init__(self, cli, paths, amount_of_secret_holders, decryption_quota,master_password):
         self.amount_of_secret_holders = amount_of_secret_holders
         self.decryption_quota = decryption_quota
@@ -21,7 +25,7 @@ class Encryption():
         self.initializeGroupData()
         self.cli = cli
         self.paths = paths
-        
+    
     def initializeUserData(self):
         self.user_mapped_data = {}
         user_count = 1
@@ -34,7 +38,13 @@ class Encryption():
 
     def addInformationToUser(self,user_id,label,content):
         self.user_mapped_data[user_id]['about'][label] = content;
-        
+
+    def getCoSecretHoldersRange():
+        return range(Encryption.MINIMUM_SECRET_HOLDERS,Encryption.MAXIMUM_SECRET_HOLDERS)
+
+    def getSecretHoldersRange():
+        return range(1,Encryption.MAXIMUM_SECRET_HOLDERS)
+            
     def getStartnumber(self):
         index = 0
         start_number = ''

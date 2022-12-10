@@ -3,7 +3,6 @@ from classes.Encryption import Encryption
 from classes.Cleanup import Cleanup
 from classes.Decryption import Decryption
 from getpass import getpass
-from classes.Paths import Paths
 import traceback
 from classes.Cli import Cli
 from classes.Paths import Paths
@@ -34,11 +33,11 @@ try:
         parser = argparse.ArgumentParser()
         parser.add_argument('--mode',type=str, dest='mode',required=True,choices=['cleanup','encrypt','decrypt'])
         parser.add_argument('--file-types',type=str, dest='file_types',required=False,choices=[Paths.TYPE_DECRYPTED, Paths.TYPE_ENCRYPTED])
-        parser.add_argument('--amount',type=int, dest='amount_of_secret_holders',required=False,choices=Paths.getCoSecretHoldersRange())
+        parser.add_argument('--amount',type=int, dest='amount_of_secret_holders',required=False,choices=Encryption.getCoSecretHoldersRange())
         parser.add_argument('--quota', type=int, dest='decryption_quota', choices=range(1,101),required=False)
         parser.add_argument('--master-password',type=str, dest='master_password',required=False)
         parser.add_argument('--user-password',type=str, dest='user_password',required=False)
-        parser.add_argument('--user',type=int, dest='user',choices=Paths.getSecretHoldersRange(),required=False)
+        parser.add_argument('--user',type=int, dest='user',choices=Encryption.getSecretHoldersRange(),required=False)
         parser.add_argument('--add-user-information',type=bool, dest='add_user_information', default=False, required=False, action=argparse.BooleanOptionalAction)
         args = parser.parse_args()
 
