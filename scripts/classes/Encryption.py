@@ -51,11 +51,11 @@ class Encryption(AbstractSplittedSecret):
         characters = string.ascii_letters + string.digits
         return (''.join(random.choice(characters) for i in range(length)).upper())
     
-    def isGroupValid(self,password_group_index_str):
+    def isGroupValid(self,password_group_name):
         secret_stakeholders_range=range(1,(self.amount_of_secret_holders+1))
         valid_numbers = re.compile("([" + ','.join([str(x) for x in secret_stakeholders_range]) + "]{" + str(self.group_members_amount) + "})")
         unvalid_sequenz = re.compile("(.)\\1+")
-        return re.search(valid_numbers, password_group_index_str) and not re.search(unvalid_sequenz, password_group_index_str)
+        return re.search(valid_numbers, password_group_name) and not re.search(unvalid_sequenz, password_group_name)
     
     def compileContacts(self):
         contacts = {}
@@ -71,21 +71,21 @@ class Encryption(AbstractSplittedSecret):
         self.compileContacts()
         index = self.getStartnumber()
         while index < self.getEndnumber():
-            password_group_index_str = ''.join(sorted(str(index)))
-            if self.isGroupValid(password_group_index_str):
-                password_group_index_int = int(password_group_index_str)
+            password_group_name = ''.join(sorted(str(index)))
+            if self.isGroupValid(password_group_name):
+                password_group_index_int = int(password_group_name)
                 if not password_group_index_int in self.group_mapped_data:
                     self.group_mapped_data[password_group_index_int] = {}
                     self.group_mapped_data[password_group_index_int]['members'] = {}
                     self.group_mapped_data[password_group_index_int]['password'] = '' 
                     password = ''
-                    for secret_holder_index in password_group_index_str:
+                    for secret_holder_index in password_group_name:
                         self.group_mapped_data[password_group_index_int]['members'][secret_holder_index]={}
                         particial_password_length= int(self.OVERALL_PASSWORD_LENGTHS*self.quota_factor); 
                         password_part = self.createPassword(particial_password_length)
                         self.group_mapped_data[password_group_index_int]['members'][secret_holder_index] = password_part
                         password += password_part
-                        self.user_mapped_data[secret_holder_index]['groups'][password_group_index_str] = password_part
+                        self.user_mapped_data[secret_holder_index]['groups'][password_group_name] = password_part
                     self.group_mapped_data[password_group_index_int]['password'] += password
             index += 1
             

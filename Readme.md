@@ -22,8 +22,9 @@ python scripts/main.py --mode decrypt --master-password "ewrwerwerew"  &&
 python scripts/main.py --mode decrypt --user "1" 
 
 
-python scripts/main.py --mode cleanup --user "1"  && python scripts/main.py --mode decrypt --user "1" --user-password "O3ITMWXZED9FKYQ0PB2WNVRWSCSCYVXCD00PJ6GQ4MFPIUWBVDCYSSSX9ZDBW5QU"
-
+python scripts/main.py --mode cleanup --user "1"  && python scripts/main.py --mode decrypt --user "1" --user-password "O3ITMWXZED9FKYQ0PB2WNVRWSCSCYVXCD00PJ6GQ4MFPIUWBVDCYSSSX9ZDBW5QU" << END_OF_INPUTS
+2
+END_OF_INPUTS
 ```
 # Requirements to know
 - Amount of People
@@ -42,8 +43,9 @@ python scripts/main.py --mode cleanup --user "1"  && python scripts/main.py --mo
 ```
 
 ## todo 
-- Implement cleanup
+- implement tails setup script
 - implement relativ call
+- implement tmp mount for decrypted files
 
 ## Further Information
 - https://www.tutorialspoint.com/python/python_command_line_arguments.htm

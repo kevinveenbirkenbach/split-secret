@@ -32,6 +32,19 @@ class Decryption(AbstractSplittedSecret):
     def resetDecrypterIds(self):
         self.decrypter_ids = []
         self.addDecrypterId(self.user_id)
+        
+    def resetPasswordShare(self):
+        self.password_parts = {}
+        self.addPasswordShare(self.user_id,self.getPasswordShare())
+
+    def addPasswordShare(self,user_id,password_share):
+        self.password_parts[str(user_id)] = password_share
+        
+    def getSharedPassword(self):
+        shared_password = ''
+        for password_share_index in sorted(self.password_parts):
+            shared_password += str(self.password_parts[password_share_index])
+        return shared_password
     
     def addDecrypterId(self,decrypter_id):
         decrypter_id = int(decrypter_id)
@@ -42,9 +55,24 @@ class Decryption(AbstractSplittedSecret):
         if decrypter_id in self.decrypter_ids:
             raise Exception("The decrypter is already in the list.")
         self.decrypter_ids.append(decrypter_id)
-        
-    def getDecryptersIds(self):
+    
+    def getUserId(self):
+        return self.user_id
+    
+    def getCoDecrypterIds(self):
+        co_decrypter_ids = self.decrypter_ids[:]
+        co_decrypter_ids.remove(int(self.user_id))
+        return co_decrypter_ids
+    
+    def getDecrypterIds(self):
         return self.decrypter_ids
+    
+    def getDecryptersGroupName(self):
+        self.decrypter_ids.sort()
+        return ''.join(str(x) for x in self.decrypter_ids)
+    
+    def getPasswordShare(self):
+        return self.user_data['groups'][str(self.getDecryptersGroupName())]
         
     def getNeededCoDecryptersAmount(self):
         return self.needed_decrypters_amount -1
