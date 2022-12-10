@@ -113,10 +113,10 @@ class Encryption(AbstractSplittedSecret):
         self.encryptToJsonFile(data,file_path,self.master_password)
         
     def encryptMainData(self):
-        self.executeCommand('tar -cvzf - data/decrypted/main_data | gpg -c --batch --passphrase "' + self.master_password +'" > data/encrypted/main_data.tar.gz.gpg');
-        pass
+        self.executeCommand('tar -cvzf - "' + self.getDecryptedMainDataStandartFolder() + '" | gpg -c --batch --passphrase "' + self.master_password +'" > "' + self.getEncryptedMainDataFile() + '"');
     
-    def encrypt(self):
+    def encryptAll(self):
         self.encryptUserFile()
         self.encryptAccumulatedFile()
         self.encryptGroupFiles()
+        self.encryptMainData()

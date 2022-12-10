@@ -22,7 +22,7 @@ class Decryption(AbstractSplittedSecret):
         self.group_name = self.getDecryptersGroupName()
         self.encrypted_group_file_path = self.getGroupFilePath(self.group_name, AbstractSplittedSecret.TYPE_DECRYPTED)
         self.decryptGroupFile()
-        self.master_password = self.loadTxtFile(self.encrypted_group_file_path)
+        self.master_password = self.loadTxtFile(self.encrypted_group_file_path).strip()
 
     def initializeNeededDecryptersAmount(self):
         self.needed_decrypters_amount = len(str(list(self.user_data['groups'].keys())[0]))
@@ -113,5 +113,4 @@ class Decryption(AbstractSplittedSecret):
         self.decryptFile(self.user_password, input_file_path, output_file_path)
     
     def decryptMainData(self):
-        # gpg --batch --passphrase "helloworld" -d data/encrypted/main_data.tar.gz.gpg | tar -xvzf -
-        pass
+        self.executeCommand('gpg --batch --passphrase "' + self.getMasterPassword() + '" -d "' + self.getEncryptedMainDataFile() + '" | tar -xvzf - "' + self.getDecryptedMainDataStandartFolder() + '"')

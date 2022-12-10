@@ -18,13 +18,12 @@ echo2 foxtrott
 asfdasd@sdskjd.de
 street in strasdlasöd
 END_OF_INPUTS
-python scripts/main.py --mode decrypt --master-password "ewrwerwerew"  &&
-python scripts/main.py --mode decrypt --user "1" 
+python scripts/main.py --mode decrypt --master-password "ewrwerwerew" 
 
 
-python scripts/main.py --mode cleanup --file-types decrypted && python scripts/main.py --mode decrypt --user "1" --user-password "O3ITMWXZED9FKYQ0PB2WNVRWSCSCYVXCD00PJ6GQ4MFPIUWBVDCYSSSX9ZDBW5QU" << END_OF_INPUTS
+python scripts/main.py --mode cleanup --file-types decrypted && python scripts/main.py --mode decrypt --user "1" --user-password "DDB2QYHP4X0PDR0ZX9LBLACNL6VAXLXMNEZJDOOGUTENSI6UDYGPOR5CV01YLI49" << END_OF_INPUTS
 2
-YGC6FLI5FIFL4WV4JPZZI7RVOZTWLROCLY4HVGDMWWSTAIQJTLUQK1VBBY0E24PN
+EOQXCYGEY2IMKAJP5VOCRVRH9LPYAPK9IC0ID0GMSJ5KXNXJHPNUBUKEVLE2WHQJ
 END_OF_INPUTS
 ```
 # Requirements to know
@@ -49,6 +48,8 @@ END_OF_INPUTS
 - implement tails setup script
 - implement relativ call
 - implement tmp mount for decrypted files
+- add data-input attribut
+- add data-output attribut
 
 ## Further Information
 - https://www.tutorialspoint.com/python/python_command_line_arguments.htm

@@ -14,15 +14,17 @@ def clean_exit():
         cleanup.cleanupFiles(AbstractSplittedSecret.TYPE_DECRYPTED)
     except:
         pass
-    print("Leaving program.")
-    exit()
+    standard_exit()
 
 def dirty_exit():
     print("ATTENTION: SECURITY RISK !!!\nPROGRAM DIDN'T CLEAN UP DECRYPTED DATA. \nDECRYPTED DATA EXISTS AND CAN BE READ BY EVERYBODY!")
     print("TO REMOVE DECRYPTED DATA EXECUTE:\nmain.py --mode cleanup --file-types " + AbstractSplittedSecret.TYPE_DECRYPTED)
+    standard_exit()
+
+def standard_exit():
     print("Leaving program.")
     exit()
-
+    
 try:
     if __name__ == '__main__':
         parser = argparse.ArgumentParser()
@@ -45,13 +47,13 @@ try:
                 if args.user is None: 
                     print("Deleting all encrypted and decrypted files.")
                     cleanup.deleteAll()
-                    clean_exit()
+                    standard_exit()
                 print("Deleting all files which aren't related to user: " + str(args.user));
                 cleanup.cleanupForUser(args.user)
-                clean_exit()
+                standard_exit()
             print("Deleting all " + args.file_types + " files.")
             cleanup.cleanupFiles(args.file_types)
-            clean_exit()
+            standard_exit()
             
         if args.mode == 'decrypt':
             decrypt = Decryption()
@@ -120,11 +122,14 @@ try:
                         break;
                     except:
                         print("An unexpected error occured: \n" + traceback.format_exc())
+                print("Decrypting main data.")
+                decrypt.decryptMainData()
+                print("All data decrypted.")
                 dirty_exit()
-            print("Decrypting accumulated file...")
+            print("Decrypting accumulated data.")
             decrypt.setUserPassword(args.master_password)
             decrypt.decryptAccumulatedFile()
-            clean_exit()
+            dirty_exit()
         
         if args.mode == 'encrypt':
             if args.master_password is None:
@@ -139,8 +144,9 @@ try:
                         print("Enter attribut <<" + label + ">> for user <<" + user_id+ ">>:" )
                         encrypt.addInformationToUser(user_id, label, str(input()))
             encrypt.compileData()
-            encrypt.encrypt()
-            clean_exit()
+            encrypt.encryptAll()
+            
+            dirty_exit()
 except KeyboardInterrupt:
     print("Program interrupted by user.")
 clean_exit()

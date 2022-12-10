@@ -21,14 +21,20 @@ class AbstractSplittedSecret(Cli):
     def getSecretHoldersRange():
         return range(1,AbstractSplittedSecret.MAXIMUM_SECRET_HOLDERS)
     
-    def getFolderPath(self,folder_type):
+    def getDataFolderPath(self,folder_type):
         return self.data_folder + folder_type + "/"
     
     def getGroupFilesFolderPath(self,folder_type):
-        return self.getFolderPath(folder_type) + "group_files/"
+        return self.getDataFolderPath(folder_type) + "group_files/"
     
     def getUserFilesFolderPath(self,folder_type):
-        return self.getFolderPath(folder_type) + "user_files/"
+        return self.getDataFolderPath(folder_type) + "user_files/"
+    
+    def getEncryptedMainDataFile(self):
+        return self.getDataFolderPath(AbstractSplittedSecret.TYPE_ENCRYPTED) + "main_data.tar.gz.gpg"
+    
+    def getDecryptedMainDataStandartFolder(self):
+        return self.getDataFolderPath(AbstractSplittedSecret.TYPE_DECRYPTED) + "main_data/"
     
     def getFileExtension(self,file_type):
         if file_type == AbstractSplittedSecret.TYPE_ENCRYPTED:
@@ -42,4 +48,4 @@ class AbstractSplittedSecret(Cli):
         return self.getGroupFilesFolderPath(file_type) + str(group_id) + '.txt' + self.getFileExtension(file_type);
     
     def getAccumulatedFilePath(self,file_type):
-        return self.getFolderPath(file_type) + 'accumulated.json' + self.getFileExtension(file_type);
+        return self.getDataFolderPath(file_type) + 'accumulated.json' + self.getFileExtension(file_type);
