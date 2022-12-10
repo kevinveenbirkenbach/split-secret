@@ -1,10 +1,22 @@
 from .Cli import Cli
 
 class AbstractSplittedSecret(Cli):
+    USER_PASSWORD_LENGTHS = 64
+    OVERALL_PASSWORD_LENGTHS = 128
+    
+    # At the moment the programm can used deal with one digit numbers. 
+    MAXIMUM_SECRET_HOLDERS = 9
+    MINIMUM_SECRET_HOLDERS = 2
     
     def __init__(self):
         super(Cli, self).__init__()
         self.data_folder = "data/"
+    
+    def getCoSecretHoldersRange():
+        return range(AbstractSplittedSecret.MINIMUM_SECRET_HOLDERS,AbstractSplittedSecret.MAXIMUM_SECRET_HOLDERS)
+    
+    def getSecretHoldersRange():
+        return range(1,AbstractSplittedSecret.MAXIMUM_SECRET_HOLDERS)
     
     def getFolderPath(self,folder_type):
         return self.data_folder + folder_type + "/"

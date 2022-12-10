@@ -22,7 +22,7 @@ class Encryption(AbstractSplittedSecret):
         self.user_mapped_data = {}
         user_count = 1
         while user_count <= self.amount_of_secret_holders:
-            self.user_mapped_data[str(user_count)] = {"groups":{},"user_password":self.createPassword(64),"about":{}}
+            self.user_mapped_data[str(user_count)] = {"groups":{},"user_password":self.createPassword(self.USER_PASSWORD_LENGTHS),"about":{}}
             user_count += 1;
     
     def initializeGroupData(self):
@@ -81,7 +81,7 @@ class Encryption(AbstractSplittedSecret):
                     password = ''
                     for secret_holder_index in password_group_index_str:
                         self.group_mapped_data[password_group_index_int]['members'][secret_holder_index]={}
-                        particial_password_length= int(128*self.quota_factor); 
+                        particial_password_length= int(self.OVERALL_PASSWORD_LENGTHS*self.quota_factor); 
                         password_part = self.createPassword(particial_password_length)
                         self.group_mapped_data[password_group_index_int]['members'][secret_holder_index] = password_part
                         password += password_part

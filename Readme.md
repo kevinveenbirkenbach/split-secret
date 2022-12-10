@@ -33,13 +33,17 @@ python scripts/main.py --mode cleanup --user "1"  && python scripts/main.py --mo
 - Plattform independend
 - easy to use
 
-# setup
+# required software
 ```bash 
     pip install numpy
     gpg
     python
     pip
 ```
+
+## todo 
+- Implement cleanup
+- implement relativ call
 
 ## Further Information
 - https://www.tutorialspoint.com/python/python_command_line_arguments.htm
