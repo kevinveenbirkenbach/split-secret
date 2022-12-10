@@ -4,15 +4,14 @@ import math
 import numpy
 import re
 import json
-from .AbstractSplittedSecret import AbstractSplittedSecret
+from .Paths import Paths
 
-class Encryption(AbstractSplittedSecret):
+class Encryption():
     
     USER_PASSWORD_LENGTHS = 64
     OVERALL_PASSWORD_LENGTHS = 128
     
-    def __init__(self, cli, amount_of_secret_holders, decryption_quota,master_password):
-        super(Encryption, self).__init__()
+    def __init__(self, cli, paths, amount_of_secret_holders, decryption_quota,master_password):
         self.amount_of_secret_holders = amount_of_secret_holders
         self.decryption_quota = decryption_quota
         self.master_password = master_password
@@ -21,6 +20,7 @@ class Encryption(AbstractSplittedSecret):
         self.initializeUserData()
         self.initializeGroupData()
         self.cli = cli
+        self.paths = paths
         
     def initializeUserData(self):
         self.user_mapped_data = {}
@@ -98,7 +98,7 @@ class Encryption(AbstractSplittedSecret):
     
     def encryptGroupFiles(self):
         for password_group_index_int in self.group_mapped_data:
-            encrypted_group_password_file_path = self.getGroupFilePath(password_group_index_int,AbstractSplittedSecret.TYPE_ENCRYPTED)
+            encrypted_group_password_file_path = self.paths.getGroupFilePath(password_group_index_int,Paths.TYPE_ENCRYPTED)
             self.encryptStringToFile(self.master_password,encrypted_group_password_file_path,self.group_mapped_data[password_group_index_int]['password'])
     
     def encryptToJsonFile(self,data,file_path,password):
@@ -106,18 +106,18 @@ class Encryption(AbstractSplittedSecret):
         
     def encryptUserFile(self):
         for user_id in self.user_mapped_data:
-            file_path=self.getUserFilePath(user_id,AbstractSplittedSecret.TYPE_ENCRYPTED)
+            file_path=self.paths.getUserFilePath(user_id,Paths.TYPE_ENCRYPTED)
             data=self.user_mapped_data[user_id]
             password=self.user_mapped_data[user_id]['user_password']
             self.encryptToJsonFile(data,file_path,password)
             
     def encryptAccumulatedFile(self):
-        file_path=self.getAccumulatedFilePath(AbstractSplittedSecret.TYPE_ENCRYPTED)
+        file_path=self.paths.getAccumulatedFilePath(Paths.TYPE_ENCRYPTED)
         data={"user_mapped": self.user_mapped_data, "group_mapped": self.group_mapped_data}
         self.encryptToJsonFile(data,file_path,self.master_password)
         
     def encryptMainData(self):
-        self.cli.executeCommand('tar -cvzf - "' + self.getDecryptedMainDataStandartFolder() + '" | gpg -c --batch --passphrase "' + self.master_password +'" > "' + self.getEncryptedMainDataFile() + '"');
+        self.cli.executeCommand('tar -cvzf - "' + self.paths.getDecryptedMainDataStandartFolder() + '" | gpg -c --batch --passphrase "' + self.master_password +'" > "' + self.paths.getEncryptedMainDataFile() + '"');
     
     def encryptAll(self):
         self.encryptUserFile()

@@ -1,18 +1,17 @@
-from .AbstractSplittedSecret import AbstractSplittedSecret
 import json
 from pathlib import Path
 
-class Decryption(AbstractSplittedSecret):
+class Decryption():
     
-    def __init__(self,cli):
+    def __init__(self,cli,paths):
         self.user_id='0';
         self.user_password=''
         self.cli = cli
-        super(Decryption, self).__init__()
+        self.paths = paths
     
     def initializeUser(self,user_id):
         self.user_id=str(user_id)
-        self.user_file_decrypted_path = self.getUserFilePath(self.user_id,AbstractSplittedSecret.TYPE_DECRYPTED)
+        self.user_file_decrypted_path = self.paths.getUserFilePath(self.user_id,self.paths.TYPE_DECRYPTED)
 
     def initializeUserDataDecryption(self):
         self.decryptUserFile()
@@ -22,7 +21,7 @@ class Decryption(AbstractSplittedSecret):
     
     def initializeGroupDataEncryption(self):
         self.group_name = self.getDecryptersGroupName()
-        self.encrypted_group_file_path = self.getGroupFilePath(self.group_name, AbstractSplittedSecret.TYPE_DECRYPTED)
+        self.encrypted_group_file_path = self.paths.getGroupFilePath(self.group_name, self.paths.TYPE_DECRYPTED)
         self.decryptGroupFile()
         self.master_password = self.loadTxtFile(self.encrypted_group_file_path).strip()
 
@@ -102,17 +101,17 @@ class Decryption(AbstractSplittedSecret):
         self.cli.executeCommand('gpg --batch --passphrase "'+ password + '" -o "' + output_file_path +'" "'+ input_file_path+'"')
     
     def decryptUserFile(self):
-        input_file_path = self.getUserFilePath(self.user_id,AbstractSplittedSecret.TYPE_ENCRYPTED)
+        input_file_path = self.paths.getUserFilePath(self.user_id,self.paths.TYPE_ENCRYPTED)
         self.decryptFile(self.user_password, input_file_path, self.user_file_decrypted_path)
         
     def decryptGroupFile(self):
-        input_file_path = self.getGroupFilePath(self.group_name, AbstractSplittedSecret.TYPE_ENCRYPTED)
+        input_file_path = self.paths.getGroupFilePath(self.group_name, self.paths.TYPE_ENCRYPTED)
         self.decryptFile(self.getGroupPassword(), input_file_path, self.encrypted_group_file_path)
         
     def decryptAccumulatedFile(self):
-        input_file_path = self.getAccumulatedFilePath(AbstractSplittedSecret.TYPE_ENCRYPTED)
-        output_file_path = self.getAccumulatedFilePath(AbstractSplittedSecret.TYPE_DECRYPTED)
+        input_file_path = self.paths.getAccumulatedFilePath(self.paths.TYPE_ENCRYPTED)
+        output_file_path = self.paths.getAccumulatedFilePath(self.paths.TYPE_DECRYPTED)
         self.decryptFile(self.user_password, input_file_path, output_file_path)
     
     def decryptMainData(self):
-        self.cli.executeCommand('gpg --batch --passphrase "' + self.getMasterPassword() + '" -d "' + self.getEncryptedMainDataFile() + '" | tar -xvzf - "' + self.getDecryptedMainDataStandartFolder() + '"')
+        self.cli.executeCommand('gpg --batch --passphrase "' + self.getMasterPassword() + '" -d "' + self.paths.getEncryptedMainDataFile() + '" | tar -xvzf - "' + self.paths.getDecryptedMainDataStandartFolder() + '"')

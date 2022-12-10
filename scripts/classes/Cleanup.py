@@ -1,18 +1,18 @@
-from .AbstractSplittedSecret import AbstractSplittedSecret
+from .Paths import Paths
 
-class Cleanup(AbstractSplittedSecret):
-    def __init__(self,cli):
+class Cleanup():
+    def __init__(self,cli,paths):
         self.cli = cli
-        super(Cleanup, self).__init__()
+        self.paths = paths
         
     def getAllFilePaths(self,file_type):
         all_file_paths = [
-            self.getGroupFilesFolderPath(file_type),
-            self.getUserFilesFolderPath(file_type),
-            self.getAccumulatedFilePath(file_type)
+            self.paths.getGroupFilesFolderPath(file_type),
+            self.paths.getUserFilesFolderPath(file_type),
+            self.paths.getAccumulatedFilePath(file_type)
             ]
-        if file_type == AbstractSplittedSecret.TYPE_DECRYPTED:
-            all_file_paths.append(self.getDecryptedMainDataStandartFolder())
+        if file_type == Paths.TYPE_DECRYPTED:
+            all_file_paths.append(self.paths.getDecryptedMainDataStandartFolder())
         return all_file_paths
     
     def deleteAllFilesInFolder(self,folder_path):
@@ -27,11 +27,11 @@ class Cleanup(AbstractSplittedSecret):
             
     def cleanupForUser(self,user):
         try:
-            self.cli.executeCommand('find "' + self.getDataFolderPath(AbstractSplittedSecret.TYPE_ENCRYPTED) + '" -not -name "*' + str(user) +'*" -type f -print | xargs rm -v')   
+            self.cli.executeCommand('find "' + self.paths.getDataFolderPath(Paths.TYPE_ENCRYPTED) + '" -not -name "*' + str(user) +'*" -type f -print | xargs rm -v')   
         except Exception as error:
             print(error)
-        self.cleanupFiles(AbstractSplittedSecret.TYPE_DECRYPTED)
+        self.cleanupFiles(Paths.TYPE_DECRYPTED)
 
     def deleteAll(self):
-        self.cleanupFiles(AbstractSplittedSecret.TYPE_ENCRYPTED)
-        self.cleanupFiles(AbstractSplittedSecret.TYPE_DECRYPTED)
+        self.cleanupFiles(Paths.TYPE_ENCRYPTED)
+        self.cleanupFiles(Paths.TYPE_DECRYPTED)

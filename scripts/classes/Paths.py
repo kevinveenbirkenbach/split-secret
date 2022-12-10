@@ -1,10 +1,16 @@
 import os 
 
-class AbstractSplittedSecret():
+class Paths():
     
     # At the moment the programm can only deal with one digit numbers. 
     MAXIMUM_SECRET_HOLDERS = 9
     MINIMUM_SECRET_HOLDERS = 2
+    
+    def getCoSecretHoldersRange():
+        return range(Paths.MINIMUM_SECRET_HOLDERS,Paths.MAXIMUM_SECRET_HOLDERS)
+
+    def getSecretHoldersRange():
+        return range(1,Paths.MAXIMUM_SECRET_HOLDERS)
     
     TYPE_ENCRYPTED="encrypted"
     TYPE_DECRYPTED="decrypted" 
@@ -12,14 +18,7 @@ class AbstractSplittedSecret():
     ROOT_PATH= os.path.join(os.path.dirname(os.path.abspath(__file__)),"../","../")
     
     def __init__(self):
-        
         self.data_folder = os.path.join(self.ROOT_PATH,"data") + '/'
-    
-    def getCoSecretHoldersRange():
-        return range(AbstractSplittedSecret.MINIMUM_SECRET_HOLDERS,AbstractSplittedSecret.MAXIMUM_SECRET_HOLDERS)
-    
-    def getSecretHoldersRange():
-        return range(1,AbstractSplittedSecret.MAXIMUM_SECRET_HOLDERS)
     
     def getDataFolderPath(self,folder_type):
         return self.data_folder + folder_type + "/"
@@ -31,13 +30,13 @@ class AbstractSplittedSecret():
         return self.getDataFolderPath(folder_type) + "user_files/"
     
     def getEncryptedMainDataFile(self):
-        return self.getDataFolderPath(AbstractSplittedSecret.TYPE_ENCRYPTED) + "main_data.tar.gz.gpg"
+        return self.getDataFolderPath(Paths.TYPE_ENCRYPTED) + "main_data.tar.gz.gpg"
     
     def getDecryptedMainDataStandartFolder(self):
-        return self.getDataFolderPath(AbstractSplittedSecret.TYPE_DECRYPTED) + "main_data/"
+        return self.getDataFolderPath(Paths.TYPE_DECRYPTED) + "main_data/"
     
     def getFileExtension(self,file_type):
-        if file_type == AbstractSplittedSecret.TYPE_ENCRYPTED:
+        if file_type == Paths.TYPE_ENCRYPTED:
             return '.gpg'
         return ''
     

@@ -3,24 +3,26 @@ from classes.Encryption import Encryption
 from classes.Cleanup import Cleanup
 from classes.Decryption import Decryption
 from getpass import getpass
-from classes.AbstractSplittedSecret import AbstractSplittedSecret
+from classes.Paths import Paths
 import traceback
 from classes.Cli import Cli
+from classes.Paths import Paths
 
 cli = Cli()
-cleanup = Cleanup(cli)
+paths = Paths()
+cleanup = Cleanup(cli,paths)
 
 def clean_exit():
     print("Cleaning up.")
     try:
-        cleanup.cleanupFiles(AbstractSplittedSecret.TYPE_DECRYPTED)
+        cleanup.cleanupFiles(Paths.TYPE_DECRYPTED)
     except:
         pass
     standard_exit()
 
 def dirty_exit():
     print("ATTENTION: SECURITY RISK !!!\nPROGRAM DIDN'T CLEAN UP DECRYPTED DATA. \nDECRYPTED DATA EXISTS AND CAN BE READ BY EVERYBODY!")
-    print("TO REMOVE DECRYPTED DATA EXECUTE:\nmain.py --mode cleanup --file-types " + AbstractSplittedSecret.TYPE_DECRYPTED)
+    print("TO REMOVE DECRYPTED DATA EXECUTE:\nmain.py --mode cleanup --file-types " + Paths.TYPE_DECRYPTED)
     standard_exit()
 
 def standard_exit():
@@ -31,12 +33,12 @@ try:
     if __name__ == '__main__':
         parser = argparse.ArgumentParser()
         parser.add_argument('--mode',type=str, dest='mode',required=True,choices=['cleanup','encrypt','decrypt'])
-        parser.add_argument('--file-types',type=str, dest='file_types',required=False,choices=[AbstractSplittedSecret.TYPE_DECRYPTED, AbstractSplittedSecret.TYPE_ENCRYPTED])
-        parser.add_argument('--amount',type=int, dest='amount_of_secret_holders',required=False,choices=AbstractSplittedSecret.getCoSecretHoldersRange())
+        parser.add_argument('--file-types',type=str, dest='file_types',required=False,choices=[Paths.TYPE_DECRYPTED, Paths.TYPE_ENCRYPTED])
+        parser.add_argument('--amount',type=int, dest='amount_of_secret_holders',required=False,choices=Paths.getCoSecretHoldersRange())
         parser.add_argument('--quota', type=int, dest='decryption_quota', choices=range(1,101),required=False)
         parser.add_argument('--master-password',type=str, dest='master_password',required=False)
         parser.add_argument('--user-password',type=str, dest='user_password',required=False)
-        parser.add_argument('--user',type=int, dest='user',choices=AbstractSplittedSecret.getSecretHoldersRange(),required=False)
+        parser.add_argument('--user',type=int, dest='user',choices=Paths.getSecretHoldersRange(),required=False)
         parser.add_argument('--add-user-information',type=bool, dest='add_user_information', default=False, required=False, action=argparse.BooleanOptionalAction)
         args = parser.parse_args()
 
@@ -58,7 +60,7 @@ try:
             standard_exit()
             
         if args.mode == 'decrypt':
-            decrypt = Decryption(cli)
+            decrypt = Decryption(cli,paths)
             if args.master_password is None:
                 if args.user is None: 
                     print("Type in the user id:")
@@ -139,7 +141,7 @@ try:
                 master_password = getpass()
             else:
                 master_password = args.master_password
-            encrypt = Encryption(cli,args.amount_of_secret_holders, args.decryption_quota, master_password)
+            encrypt = Encryption(cli,paths,args.amount_of_secret_holders, args.decryption_quota, master_password)
             if args.add_user_information is not None:
                 for user_id in encrypt.user_mapped_data:
                     for label in ['name','phone','email','address']:
