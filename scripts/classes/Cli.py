@@ -19,7 +19,7 @@ class Cli(object):
         for line in stdout:
             self.output.append(line.decode("utf-8"))
         if process.wait() > bool(0):
-            raise Exception("Error for: \nCommand:<<" + command + ">>\nOutput:<<" + out + ">>\nExitcode:<<" + err + ">>")
+            raise Exception("Error for: \nCommand:<<" + str(command) + ">>\nOutput:<<" + str(out) + ">>\nExitcode:<<" + str(err) + ">>")
         return self.output
     
     def getOutputString(self):

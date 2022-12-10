@@ -1,5 +1,6 @@
 from .AbstractSplittedSecret import AbstractSplittedSecret
 import json
+from pathlib import Path
 class Decryption(AbstractSplittedSecret):
     
     def __init__(self):
@@ -16,6 +17,12 @@ class Decryption(AbstractSplittedSecret):
         self.user_data = self.loadJsonFile(self.user_file_decrypted_path)
         self.initializeNeededDecryptersAmount()
         self.initializeValidDecrypterIds()
+    
+    def initializeGroupDataEncryption(self):
+        self.group_name = self.getDecryptersGroupName()
+        self.encrypted_group_file_path = self.getGroupFilePath(self.group_name, AbstractSplittedSecret.TYPE_DECRYPTED)
+        self.decryptGroupFile()
+        self.master_password = self.loadTxtFile(self.encrypted_group_file_path)
 
     def initializeNeededDecryptersAmount(self):
         self.needed_decrypters_amount = len(str(list(self.user_data['groups'].keys())[0]))
@@ -40,11 +47,14 @@ class Decryption(AbstractSplittedSecret):
     def addPasswordShare(self,user_id,password_share):
         self.password_parts[str(user_id)] = password_share
         
-    def getSharedPassword(self):
+    def getGroupPassword(self):
         shared_password = ''
         for password_share_index in sorted(self.password_parts):
             shared_password += str(self.password_parts[password_share_index])
         return shared_password
+    
+    def getMasterPassword(self):
+        return self.master_password
     
     def addDecrypterId(self,decrypter_id):
         decrypter_id = int(decrypter_id)
@@ -77,6 +87,9 @@ class Decryption(AbstractSplittedSecret):
     def getNeededCoDecryptersAmount(self):
         return self.needed_decrypters_amount -1
     
+    def loadTxtFile(self,file_path):
+        return Path(file_path).read_text()
+    
     def loadJsonFile(self,file_path):
         file = open(file_path)
         data = json.load(file)
@@ -89,6 +102,10 @@ class Decryption(AbstractSplittedSecret):
     def decryptUserFile(self):
         input_file_path = self.getUserFilePath(self.user_id,AbstractSplittedSecret.TYPE_ENCRYPTED)
         self.decryptFile(self.user_password, input_file_path, self.user_file_decrypted_path)
+        
+    def decryptGroupFile(self):
+        input_file_path = self.getGroupFilePath(self.group_name, AbstractSplittedSecret.TYPE_ENCRYPTED)
+        self.decryptFile(self.getGroupPassword(), input_file_path, self.encrypted_group_file_path)
         
     def decryptAccumulatedFile(self):
         input_file_path = self.getAccumulatedFilePath(AbstractSplittedSecret.TYPE_ENCRYPTED)

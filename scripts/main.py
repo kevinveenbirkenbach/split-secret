@@ -12,7 +12,7 @@ def clean_exit():
     print("Cleaning up.")
     cleanup.cleanupFiles(AbstractSplittedSecret.TYPE_DECRYPTED)
     print("Leaving program. Goodby :)")
-    exit();
+    exit()
     pass
 try:
     if __name__ == '__main__':
@@ -42,13 +42,13 @@ try:
             decrypt = Decryption()
             if args.master_password is None:
                 if args.user is None: 
-                    print("Please type in the user number:")
+                    print("Type in the user id:")
                     decrypt.initializeUser(input())
                 else:
                     decrypt.initializeUser(args.user)
                 if args.user_password is None:
                     while True:
-                        print("Please enter the user password:")
+                        print("Enter the user password:")
                         decrypt.setUserPassword(getpass())
                         print("Decrypting User File...")
                         try:
@@ -64,13 +64,12 @@ try:
                     except Exception as error:
                         print("An error occured. Propably you passed a wrong password :( The error is: " + str(error))
                         clean_exit()
-                print("File decrypted :) \n")
-                print("Please contact the following persons and tell them that you need help to encrypt the data: \n")
+                print("Contact the following persons and tell them that you need help to encrypt the data: \n")
                 for contact_id in decrypt.user_data['contacts']:
                     print("user_id: " + contact_id)
                     for label in decrypt.user_data['contacts'][contact_id]:
                         print(label + ": " + decrypt.user_data['contacts'][contact_id][label])
-                    print("--------------------------------\n")
+                    print()
                 while True:
                     decrypt.resetDecrypterIds()
                     try:
@@ -83,23 +82,30 @@ try:
                             person_counter += 1
                         break
                     except Exception as error:
-                        print("The following error occured <<" + str(error) + ">> :( \n Please try again :)")
-                print("\nFOR PASSWORD GROUP: " + decrypt.getDecryptersGroupName()) 
+                        print("The following error occured <<" + str(error) + ">> :( \n Try again :)")
+                print("\nYour data is:\n")
+                print("FOR PASSWORD GROUP: " + decrypt.getDecryptersGroupName()) 
                 print("FOR USER ID: "  + decrypt.getUserId())
                 print("PASSWORD SHARE IS: " + decrypt.getPasswordShare() + "\n")
                 while True:
-                    decrypt.resetPasswordShare()
-                    co_decrypter_ids = decrypt.getCoDecrypterIds()
-                    print("Please execute this script at the users " + str(co_decrypter_ids) + ".")
-                    for co_decrypter_id in decrypt.getCoDecrypterIds():
-                        print("\nFOR PASSWORD GROUP: " + decrypt.getDecryptersGroupName()) 
-                        print("FOR USER: " + str(co_decrypter_id)) 
-                        print("PASSWORD SHARE IS: ")
-                        decrypt.addPasswordShare(co_decrypter_id, input())
-                    print("\nTHE SHARED PASSWORD IS: " + decrypt.getSharedPassword())
-                    break;
-                        
-                clean_exit()  
+                    try:
+                        decrypt.resetPasswordShare()
+                        co_decrypter_ids = decrypt.getCoDecrypterIds()
+                        for co_decrypter_id in decrypt.getCoDecrypterIds():
+                            print("Execute this script for user: " + str(co_decrypter_id) + ".")
+                            print("Type in the password share.\n")
+                            print("\nFOR PASSWORD GROUP: " + decrypt.getDecryptersGroupName()) 
+                            print("FOR USER: " + str(co_decrypter_id)) 
+                            print("PASSWORD SHARE IS: ")
+                            decrypt.addPasswordShare(co_decrypter_id, input())
+                        print("\nTHE GROUP PASSWORD IS: " + decrypt.getGroupPassword())
+                        print("\nDecrypting group password file.\n")
+                        decrypt.initializeGroupDataEncryption()
+                        print("THE MASTER PASSWORD IS: " + decrypt.getMasterPassword())
+                        break;
+                    except:
+                        print("An unexpected error occured: \n" + traceback.format_exc())
+                clean_exit()
             print("Decrypting accumulated file...")
             decrypt.setUserPassword(args.master_password)
             decrypt.decryptAccumulatedFile()
@@ -107,7 +113,7 @@ try:
         
         if args.mode == 'encrypt':
             if args.master_password is None:
-                print("Please enter the master password:")
+                print("Enter the master password:")
                 master_password = getpass()
             else:
                 master_password = args.master_password
@@ -115,11 +121,13 @@ try:
             if args.add_user_information is not None:
                 for user_id in encrypt.user_mapped_data:
                     for label in ['name','phone','email','address']:
-                        print("Please enter attribut <<" + label + ">> for user <<" + user_id+ ">>:" )
+                        print("Enter attribut <<" + label + ">> for user <<" + user_id+ ">>:" )
                         encrypt.addInformationToUser(user_id, label, str(input()))
             encrypt.compileData()
             encrypt.encrypt()
             clean_exit()
-except Exception:
-    print(traceback.format_exc())
+except KeyboardInterrupt:
+    print("Program interrupted by user.")
+except:
+    print("An unexpected error occured: \n" + traceback.format_exc())
 clean_exit()
