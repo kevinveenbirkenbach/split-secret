@@ -8,6 +8,9 @@ class AbstractSplittedSecret(Cli):
     MAXIMUM_SECRET_HOLDERS = 9
     MINIMUM_SECRET_HOLDERS = 2
     
+    TYPE_ENCRYPTED="encrypted"
+    TYPE_DECRYPTED="decrypted"
+    
     def __init__(self):
         super(Cli, self).__init__()
         self.data_folder = "data/"
@@ -28,7 +31,7 @@ class AbstractSplittedSecret(Cli):
         return self.getFolderPath(folder_type) + "user_files/"
     
     def getFileExtension(self,file_type):
-        if file_type == "encrypted":
+        if file_type == AbstractSplittedSecret.TYPE_ENCRYPTED:
             return '.gpg'
         return ''
     

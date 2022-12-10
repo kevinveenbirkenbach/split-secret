@@ -5,6 +5,15 @@ from classes.Decryption import Decryption
 from getpass import getpass
 from classes.AbstractSplittedSecret import AbstractSplittedSecret
 
+cleanup = Cleanup()
+
+def clean_exit():
+    print("Cleaning up.")
+    cleanup.cleanupFiles(AbstractSplittedSecret.TYPE_DECRYPTED)
+    print("Leaving program. Goodby :)")
+    exit();
+    pass
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--mode',type=str, dest='mode',required=True,choices=['cleanup','encrypt','decrypt'])
@@ -15,22 +24,20 @@ if __name__ == '__main__':
     parser.add_argument('--user',type=int, dest='user',choices=AbstractSplittedSecret.getSecretHoldersRange(),required=False)
     parser.add_argument('--add-user-information',type=bool, dest='add_user_information', default=False, required=False, action=argparse.BooleanOptionalAction)
     args = parser.parse_args()
-    mode = args.mode
-    
+
     print("Splitted Secret Interface started.")
-    print("Selected Mode: " + mode)
+    print("Selected Mode: " + args.mode)
     
-    if mode == 'cleanup':
-        cleanup = Cleanup()
+    if args.mode == 'cleanup':   
         if args.user is None: 
             print("Delete all files.")
             cleanup.deleteAll()
-            exit()
+            clean_exit()
         print("Delete files for user <<" + str(args.user) + ">>");
         cleanup.cleanupForUser(args.user)
-        exit()
+        clean_exit()
         
-    if mode == 'decrypt':
+    if args.mode == 'decrypt':
         decrypt = Decryption()
         if args.master_password is None:
             if args.user is None: 
@@ -55,7 +62,7 @@ if __name__ == '__main__':
                     decrypt.initializeUserDataDecryption();
                 except Exception as error:
                     print("An error occured. Propably you passed a wrong password :( The error is: " + str(error))
-                    exit()
+                    clean_exit()
             print("File decrypted :) \n")
             print("Please contact the following persons and tell them that you need help to encrypt the data: \n")
             for contact_id in decrypt.user_data['contacts']:
@@ -76,13 +83,14 @@ if __name__ == '__main__':
                     break
                 except Exception as error:
                     print("The following error occured <<" + str(error) + ">> :( \n Please try again :)")
-            exit()  
+                    
+            clean_exit()  
         print("Decrypting accumulated file...")
         decrypt.setUserPassword(args.master_password)
         decrypt.decryptAccumulatedFile()
-        exit()
+        clean_exit()
     
-    if mode == 'encrypt':
+    if args.mode == 'encrypt':
         if args.master_password is None:
             print("Please enter the master password:")
             master_password = getpass()
@@ -96,4 +104,5 @@ if __name__ == '__main__':
                     encrypt.addInformationToUser(user_id, label, str(input()))
         encrypt.compileData()
         encrypt.encrypt()
-        exit()
+        clean_exit()
+clean_exit()

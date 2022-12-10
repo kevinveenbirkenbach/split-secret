@@ -94,7 +94,7 @@ class Encryption(AbstractSplittedSecret):
     
     def encryptGroupFiles(self):
         for password_group_index_int in self.group_mapped_data:
-            encrypted_group_password_file_path = self.getGroupFilePath(password_group_index_int,"encrypted")
+            encrypted_group_password_file_path = self.getGroupFilePath(password_group_index_int,AbstractSplittedSecret.TYPE_ENCRYPTED)
             self.encryptStringToFile(self.master_password,encrypted_group_password_file_path,self.group_mapped_data[password_group_index_int]['password'])
     
     def encryptToJsonFile(self,data,file_path,password):
@@ -102,13 +102,13 @@ class Encryption(AbstractSplittedSecret):
         
     def encryptUserData(self):
         for user_id in self.user_mapped_data:
-            file_path=self.getUserFilePath(user_id,"encrypted")
+            file_path=self.getUserFilePath(user_id,AbstractSplittedSecret.TYPE_ENCRYPTED)
             data=self.user_mapped_data[user_id]
             password=self.user_mapped_data[user_id]['user_password']
             self.encryptToJsonFile(data,file_path,password)
             
     def encryptAccumulatedData(self):
-        file_path=self.getAccumulatedFilePath("encrypted")
+        file_path=self.getAccumulatedFilePath(AbstractSplittedSecret.TYPE_ENCRYPTED)
         data={"user_mapped": self.user_mapped_data, "group_mapped": self.group_mapped_data}
         self.encryptToJsonFile(data,file_path,self.master_password)
     
