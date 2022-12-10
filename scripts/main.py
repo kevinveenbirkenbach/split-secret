@@ -10,14 +10,24 @@ cleanup = Cleanup()
 
 def clean_exit():
     print("Cleaning up.")
-    cleanup.cleanupFiles(AbstractSplittedSecret.TYPE_DECRYPTED)
-    print("Leaving program. Goodby :)")
+    try:
+        cleanup.cleanupFiles(AbstractSplittedSecret.TYPE_DECRYPTED)
+    except:
+        pass
+    print("Leaving program.")
     exit()
-    pass
+
+def dirty_exit():
+    print("ATTENTION: SECURITY RISK !!!\nPROGRAM DIDN'T CLEAN UP DECRYPTED DATA. \nDECRYPTED DATA EXISTS AND CAN BE READ BY EVERYBODY!")
+    print("TO REMOVE DECRYPTED DATA EXECUTE:\nmain.py --mode cleanup --file-types " + AbstractSplittedSecret.TYPE_DECRYPTED)
+    print("Leaving program.")
+    exit()
+
 try:
     if __name__ == '__main__':
         parser = argparse.ArgumentParser()
         parser.add_argument('--mode',type=str, dest='mode',required=True,choices=['cleanup','encrypt','decrypt'])
+        parser.add_argument('--file-types',type=str, dest='file_types',required=False,choices=[AbstractSplittedSecret.TYPE_DECRYPTED, AbstractSplittedSecret.TYPE_ENCRYPTED])
         parser.add_argument('--amount',type=int, dest='amount_of_secret_holders',required=False,choices=AbstractSplittedSecret.getCoSecretHoldersRange())
         parser.add_argument('--quota', type=int, dest='decryption_quota', choices=range(1,101),required=False)
         parser.add_argument('--master-password',type=str, dest='master_password',required=False)
@@ -26,16 +36,21 @@ try:
         parser.add_argument('--add-user-information',type=bool, dest='add_user_information', default=False, required=False, action=argparse.BooleanOptionalAction)
         args = parser.parse_args()
 
-        print("Splitted Secret Interface started.")
+        print("Application started.")
         print("Selected Mode: " + args.mode)
         
         if args.mode == 'cleanup':   
-            if args.user is None: 
-                print("Delete all files.")
-                cleanup.deleteAll()
+            print("Cleaning up.")
+            if args.file_types is None:
+                if args.user is None: 
+                    print("Deleting all encrypted and decrypted files.")
+                    cleanup.deleteAll()
+                    clean_exit()
+                print("Deleting all files which aren't related to user: " + str(args.user));
+                cleanup.cleanupForUser(args.user)
                 clean_exit()
-            print("Delete files for user <<" + str(args.user) + ">>");
-            cleanup.cleanupForUser(args.user)
+            print("Deleting all " + args.file_types + " files.")
+            cleanup.cleanupFiles(args.file_types)
             clean_exit()
             
         if args.mode == 'decrypt':
@@ -64,22 +79,23 @@ try:
                     except Exception as error:
                         print("An error occured. Propably you passed a wrong password :( The error is: " + str(error))
                         clean_exit()
-                print("Contact the following persons and tell them that you need help to encrypt the data: \n")
+                print("\nContact the following persons and request their password share: \n")
                 for contact_id in decrypt.user_data['contacts']:
                     print("user_id: " + contact_id)
                     for label in decrypt.user_data['contacts'][contact_id]:
                         print(label + ": " + decrypt.user_data['contacts'][contact_id][label])
-                    print()
                 while True:
+                    print("\nReset password shares.\n")
                     decrypt.resetDecrypterIds()
                     try:
-                        person_counter = 1
-                        while person_counter <= decrypt.getNeededCoDecryptersAmount():
-                            print("The following user id's are in the decryption list: " + str(decrypt.getDecrypterIds()))
-                            print("You need at least <<" + str(decrypt.getNeededCoDecryptersAmount()) +">> other person to decrypt the secret.")
-                            print("Type in the user id of another encrypter:")
+                        password_shares_count = 1
+                        while password_shares_count < decrypt.getNeededDecryptersAmount():
+                            print(str(password_shares_count) + " password shares had been added.")
+                            print("Password shares for the the users " + str(decrypt.getDecrypterIds()) + " been added. ")
+                            print("You need to add " + str((decrypt.getNeededDecryptersAmount()-password_shares_count)) +" more password shares.")
+                            print("\nType in the user id of another decrypter:")
                             decrypt.addDecrypterId(int(input()))
-                            person_counter += 1
+                            password_shares_count += 1
                         break
                     except Exception as error:
                         print("The following error occured <<" + str(error) + ">> :( \n Try again :)")
@@ -92,9 +108,8 @@ try:
                         decrypt.resetPasswordShare()
                         co_decrypter_ids = decrypt.getCoDecrypterIds()
                         for co_decrypter_id in decrypt.getCoDecrypterIds():
-                            print("Execute this script for user: " + str(co_decrypter_id) + ".")
-                            print("Type in the password share.\n")
-                            print("\nFOR PASSWORD GROUP: " + decrypt.getDecryptersGroupName()) 
+                            print("Type in the password share for: \n")
+                            print("FOR PASSWORD GROUP: " + decrypt.getDecryptersGroupName()) 
                             print("FOR USER: " + str(co_decrypter_id)) 
                             print("PASSWORD SHARE IS: ")
                             decrypt.addPasswordShare(co_decrypter_id, input())
@@ -105,7 +120,7 @@ try:
                         break;
                     except:
                         print("An unexpected error occured: \n" + traceback.format_exc())
-                clean_exit()
+                dirty_exit()
             print("Decrypting accumulated file...")
             decrypt.setUserPassword(args.master_password)
             decrypt.decryptAccumulatedFile()
@@ -128,6 +143,4 @@ try:
             clean_exit()
 except KeyboardInterrupt:
     print("Program interrupted by user.")
-except:
-    print("An unexpected error occured: \n" + traceback.format_exc())
 clean_exit()

@@ -84,8 +84,8 @@ class Decryption(AbstractSplittedSecret):
     def getPasswordShare(self):
         return self.user_data['groups'][str(self.getDecryptersGroupName())]
         
-    def getNeededCoDecryptersAmount(self):
-        return self.needed_decrypters_amount -1
+    def getNeededDecryptersAmount(self):
+        return self.needed_decrypters_amount
     
     def loadTxtFile(self,file_path):
         return Path(file_path).read_text()

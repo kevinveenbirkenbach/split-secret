@@ -22,8 +22,9 @@ python scripts/main.py --mode decrypt --master-password "ewrwerwerew"  &&
 python scripts/main.py --mode decrypt --user "1" 
 
 
-python scripts/main.py --mode cleanup --user "1"  && python scripts/main.py --mode decrypt --user "1" --user-password "O3ITMWXZED9FKYQ0PB2WNVRWSCSCYVXCD00PJ6GQ4MFPIUWBVDCYSSSX9ZDBW5QU" << END_OF_INPUTS
+python scripts/main.py --mode cleanup --file-types decrypted && python scripts/main.py --mode decrypt --user "1" --user-password "O3ITMWXZED9FKYQ0PB2WNVRWSCSCYVXCD00PJ6GQ4MFPIUWBVDCYSSSX9ZDBW5QU" << END_OF_INPUTS
 2
+YGC6FLI5FIFL4WV4JPZZI7RVOZTWLROCLY4HVGDMWWSTAIQJTLUQK1VBBY0E24PN
 END_OF_INPUTS
 ```
 # Requirements to know
