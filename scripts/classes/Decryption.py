@@ -1,11 +1,13 @@
 from .AbstractSplittedSecret import AbstractSplittedSecret
 import json
 from pathlib import Path
+
 class Decryption(AbstractSplittedSecret):
     
-    def __init__(self):
+    def __init__(self,cli):
         self.user_id='0';
         self.user_password=''
+        self.cli = cli
         super(Decryption, self).__init__()
     
     def initializeUser(self,user_id):
@@ -97,7 +99,7 @@ class Decryption(AbstractSplittedSecret):
         return data
     
     def decryptFile(self,password,input_file_path,output_file_path):
-        self.executeCommand('gpg --batch --passphrase "'+ password + '" -o "' + output_file_path +'" "'+ input_file_path+'"')
+        self.cli.executeCommand('gpg --batch --passphrase "'+ password + '" -o "' + output_file_path +'" "'+ input_file_path+'"')
     
     def decryptUserFile(self):
         input_file_path = self.getUserFilePath(self.user_id,AbstractSplittedSecret.TYPE_ENCRYPTED)
@@ -113,4 +115,4 @@ class Decryption(AbstractSplittedSecret):
         self.decryptFile(self.user_password, input_file_path, output_file_path)
     
     def decryptMainData(self):
-        self.executeCommand('gpg --batch --passphrase "' + self.getMasterPassword() + '" -d "' + self.getEncryptedMainDataFile() + '" | tar -xvzf - "' + self.getDecryptedMainDataStandartFolder() + '"')
+        self.cli.executeCommand('gpg --batch --passphrase "' + self.getMasterPassword() + '" -d "' + self.getEncryptedMainDataFile() + '" | tar -xvzf - "' + self.getDecryptedMainDataStandartFolder() + '"')

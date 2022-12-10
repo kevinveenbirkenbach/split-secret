@@ -3,8 +3,8 @@ The purpose of this software is to splitt a secret over multiple people. Just if
 
 # testing
 ```bash 
-python splitted-secret/scripts/main.py --mode cleanup && 
-python splitted-secret/scripts/main.py --amount 3 --quota 50 --mode encrypt --add-user-information --master-password "ewrwerwerew"  << END_OF_INPUTS
+python scripts/main.py --mode cleanup && 
+python scripts/main.py --amount 3 --quota 50 --mode encrypt --add-user-information --master-password "ewrwerwerew"  << END_OF_INPUTS
 alpha bravo
 123123812908
 asfdasd@asdskjd.de
@@ -46,7 +46,6 @@ END_OF_INPUTS
 
 ## todo 
 - implement tails setup script
-- implement tmp mount for decrypted files
 - add data-input attribut
 - add data-output attribut
 

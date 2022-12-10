@@ -1,6 +1,8 @@
 from .AbstractSplittedSecret import AbstractSplittedSecret
+
 class Cleanup(AbstractSplittedSecret):
-    def __init__(self):
+    def __init__(self,cli):
+        self.cli = cli
         super(Cleanup, self).__init__()
         
     def getAllFilePaths(self,file_type):
@@ -15,7 +17,7 @@ class Cleanup(AbstractSplittedSecret):
     
     def deleteAllFilesInFolder(self,folder_path):
         try:
-            self.executeCommand('rm -r ' + folder_path + '*')
+            self.cli.executeCommand('rm -r ' + folder_path + '*')
         except Exception as error:
             print(error)
     
@@ -25,7 +27,7 @@ class Cleanup(AbstractSplittedSecret):
             
     def cleanupForUser(self,user):
         try:
-            self.executeCommand('find "' + self.getDataFolderPath(AbstractSplittedSecret.TYPE_ENCRYPTED) + '" -not -name "*' + str(user) +'*" -type f -print | xargs rm -v')   
+            self.cli.executeCommand('find "' + self.getDataFolderPath(AbstractSplittedSecret.TYPE_ENCRYPTED) + '" -not -name "*' + str(user) +'*" -type f -print | xargs rm -v')   
         except Exception as error:
             print(error)
         self.cleanupFiles(AbstractSplittedSecret.TYPE_DECRYPTED)

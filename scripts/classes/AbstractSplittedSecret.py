@@ -1,9 +1,6 @@
-from .Cli import Cli
 import os 
 
-class AbstractSplittedSecret(Cli):
-    USER_PASSWORD_LENGTHS = 64
-    OVERALL_PASSWORD_LENGTHS = 128
+class AbstractSplittedSecret():
     
     # At the moment the programm can only deal with one digit numbers. 
     MAXIMUM_SECRET_HOLDERS = 9
@@ -15,7 +12,6 @@ class AbstractSplittedSecret(Cli):
     ROOT_PATH= os.path.join(os.path.dirname(os.path.abspath(__file__)),"../","../")
     
     def __init__(self):
-        super(Cli, self).__init__()
         
         self.data_folder = os.path.join(self.ROOT_PATH,"data") + '/'
     

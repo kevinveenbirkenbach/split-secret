@@ -5,8 +5,10 @@ from classes.Decryption import Decryption
 from getpass import getpass
 from classes.AbstractSplittedSecret import AbstractSplittedSecret
 import traceback
+from classes.Cli import Cli
 
-cleanup = Cleanup()
+cli = Cli()
+cleanup = Cleanup(cli)
 
 def clean_exit():
     print("Cleaning up.")
@@ -56,7 +58,7 @@ try:
             standard_exit()
             
         if args.mode == 'decrypt':
-            decrypt = Decryption()
+            decrypt = Decryption(cli)
             if args.master_password is None:
                 if args.user is None: 
                     print("Type in the user id:")
@@ -137,7 +139,7 @@ try:
                 master_password = getpass()
             else:
                 master_password = args.master_password
-            encrypt = Encryption(args.amount_of_secret_holders, args.decryption_quota, master_password)
+            encrypt = Encryption(cli,args.amount_of_secret_holders, args.decryption_quota, master_password)
             if args.add_user_information is not None:
                 for user_id in encrypt.user_mapped_data:
                     for label in ['name','phone','email','address']:

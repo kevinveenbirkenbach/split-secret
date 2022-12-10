@@ -8,7 +8,10 @@ from .AbstractSplittedSecret import AbstractSplittedSecret
 
 class Encryption(AbstractSplittedSecret):
     
-    def __init__(self, amount_of_secret_holders, decryption_quota,master_password):
+    USER_PASSWORD_LENGTHS = 64
+    OVERALL_PASSWORD_LENGTHS = 128
+    
+    def __init__(self, cli, amount_of_secret_holders, decryption_quota,master_password):
         super(Encryption, self).__init__()
         self.amount_of_secret_holders = amount_of_secret_holders
         self.decryption_quota = decryption_quota
@@ -17,6 +20,7 @@ class Encryption(AbstractSplittedSecret):
         self.group_members_amount=math.ceil(self.amount_of_secret_holders * self.quota_factor)
         self.initializeUserData()
         self.initializeGroupData()
+        self.cli = cli
         
     def initializeUserData(self):
         self.user_mapped_data = {}
@@ -90,7 +94,7 @@ class Encryption(AbstractSplittedSecret):
             index += 1
             
     def encryptStringToFile(self,text,output_file,password):
-        self.executeCommand('echo \'' + text + '\' | gpg --symmetric --armor --batch --passphrase "' + password + '" -o "' + output_file + '"')
+        self.cli.executeCommand('echo \'' + text + '\' | gpg --symmetric --armor --batch --passphrase "' + password + '" -o "' + output_file + '"')
     
     def encryptGroupFiles(self):
         for password_group_index_int in self.group_mapped_data:
@@ -113,7 +117,7 @@ class Encryption(AbstractSplittedSecret):
         self.encryptToJsonFile(data,file_path,self.master_password)
         
     def encryptMainData(self):
-        self.executeCommand('tar -cvzf - "' + self.getDecryptedMainDataStandartFolder() + '" | gpg -c --batch --passphrase "' + self.master_password +'" > "' + self.getEncryptedMainDataFile() + '"');
+        self.cli.executeCommand('tar -cvzf - "' + self.getDecryptedMainDataStandartFolder() + '" | gpg -c --batch --passphrase "' + self.master_password +'" > "' + self.getEncryptedMainDataFile() + '"');
     
     def encryptAll(self):
         self.encryptUserFile()
