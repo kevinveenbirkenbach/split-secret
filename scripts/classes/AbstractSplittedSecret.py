@@ -4,7 +4,7 @@ class AbstractSplittedSecret(Cli):
     USER_PASSWORD_LENGTHS = 64
     OVERALL_PASSWORD_LENGTHS = 128
     
-    # At the moment the programm can used deal with one digit numbers. 
+    # At the moment the programm can only deal with one digit numbers. 
     MAXIMUM_SECRET_HOLDERS = 9
     MINIMUM_SECRET_HOLDERS = 2
     

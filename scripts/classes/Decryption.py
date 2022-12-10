@@ -111,3 +111,7 @@ class Decryption(AbstractSplittedSecret):
         input_file_path = self.getAccumulatedFilePath(AbstractSplittedSecret.TYPE_ENCRYPTED)
         output_file_path = self.getAccumulatedFilePath(AbstractSplittedSecret.TYPE_DECRYPTED)
         self.decryptFile(self.user_password, input_file_path, output_file_path)
+    
+    def decryptMainData(self):
+        # gpg --batch --passphrase "helloworld" -d data/encrypted/main_data.tar.gz.gpg | tar -xvzf -
+        pass

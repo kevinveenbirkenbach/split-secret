@@ -39,6 +39,8 @@ END_OF_INPUTS
 ```bash 
     pip install numpy
     gpg
+    ecryptfs-utils 
+    ecryptfs-simple
     python
     pip
 ```
@@ -55,3 +57,4 @@ END_OF_INPUTS
 - https://pynative.com/python-generate-random-string/
 - https://www.studimup.de/abitur/stochastik/anzahl-der-m%C3%B6glichketen-berechnen-kombinatorik/
 - https://numpy.org/doc/stable/reference/generated/numpy.base_repr.html?highlight=base_repr#numpy.base_repr
+- https://linuxconfig.org/how-to-create-compressed-encrypted-archives-with-tar-and-gpg
