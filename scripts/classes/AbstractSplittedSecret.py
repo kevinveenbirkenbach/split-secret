@@ -1,4 +1,5 @@
 from .Cli import Cli
+import os 
 
 class AbstractSplittedSecret(Cli):
     USER_PASSWORD_LENGTHS = 64
@@ -9,11 +10,14 @@ class AbstractSplittedSecret(Cli):
     MINIMUM_SECRET_HOLDERS = 2
     
     TYPE_ENCRYPTED="encrypted"
-    TYPE_DECRYPTED="decrypted"
+    TYPE_DECRYPTED="decrypted" 
+    
+    ROOT_PATH= os.path.join(os.path.dirname(os.path.abspath(__file__)),"../","../")
     
     def __init__(self):
         super(Cli, self).__init__()
-        self.data_folder = "data/"
+        
+        self.data_folder = os.path.join(self.ROOT_PATH,"data") + '/'
     
     def getCoSecretHoldersRange():
         return range(AbstractSplittedSecret.MINIMUM_SECRET_HOLDERS,AbstractSplittedSecret.MAXIMUM_SECRET_HOLDERS)
