@@ -128,8 +128,6 @@ class Encryption():
         
     def encryptMainData(self):
         self.cli.executeCommand('tar -C"' + self.paths.getDecryptedMainDataStandartFolder() + '" -cvzf - ./ | gpg -c --batch --passphrase "' + self.master_password +'" > "' + self.paths.getEncryptedMainDataFile() + '"')
-        print(self.cli.getCommandString())
-        print(self.cli.getOutputString())
     
     def encryptAll(self):
         self.encryptUserFile()
