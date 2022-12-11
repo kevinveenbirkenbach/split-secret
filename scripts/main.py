@@ -33,12 +33,14 @@ try:
         parser = argparse.ArgumentParser()
         parser.add_argument('--mode',type=str, dest='mode',required=True,choices=['cleanup','encrypt','decrypt'])
         parser.add_argument('--file-types',type=str, dest='file_types',required=False,choices=[Paths.TYPE_DECRYPTED, Paths.TYPE_ENCRYPTED])
-        parser.add_argument('--amount',type=int, dest='amount_of_secret_holders',required=False,choices=Encryption.getCoSecretHoldersRange())
+        parser.add_argument('--secret-holders-amount',type=int, dest='amount_of_secret_holders',required=False,choices=Encryption.getCoSecretHoldersRange(),help="Needed for creating of encryption meta data.")
         parser.add_argument('--quota', type=int, dest='decryption_quota', choices=range(1,101),required=False)
         parser.add_argument('--master-password',type=str, dest='master_password',required=False)
         parser.add_argument('--user-password',type=str, dest='user_password',required=False)
         parser.add_argument('--user',type=int, dest='user',choices=Encryption.getSecretHoldersRange(),required=False)
-        parser.add_argument('--add-user-information',type=bool, dest='add_user_information', default=False, required=False, action=argparse.BooleanOptionalAction)
+        parser.add_argument('--add-user-information',type=bool, dest='add_user_information', default=False, required=False, action=argparse.BooleanOptionalAction, help="Add additional information to users.")
+        parser.add_argument('--input-directory',type=str,dest='input_directory',required=False, help="The directory from which the data should be encrypted.")
+        parser.add_argument('--create-meta-data',type=bool, dest='create_meta_data', default=False, required=False, action=argparse.BooleanOptionalAction, help="When mode is encrypt and this flag is set, the encrypted meta data is created.")
         args = parser.parse_args()
 
         print("Application started.")
@@ -149,13 +151,18 @@ try:
             else:
                 master_password = args.master_password
             encrypt = Encryption(cli,paths,args.amount_of_secret_holders, args.decryption_quota, master_password)
-            if args.add_user_information is not None:
+            if args.add_user_information is True:
                 for user_id in encrypt.user_mapped_data:
-                    for label in ['name','phone','email','address']:
+                    for label in ['name','phone','email','address','notes']:
                         print("Enter attribut <<" + label + ">> for user <<" + user_id+ ">>:" )
                         encrypt.addInformationToUser(user_id, label, str(input()))
             encrypt.compileData()
-            encrypt.encryptAll()
+            if args.create_meta_data is True:
+                print("Create and encrypt meta data.")
+                encrypt.encryptMetaData()
+            if args.input_directory is not None:
+                print("Encrypt main data.")
+                encrypt.encryptMainData(args.input_directory)
             dirty_exit()
 except KeyboardInterrupt:
     print("Program interrupted by user.")

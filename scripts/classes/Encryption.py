@@ -40,10 +40,10 @@ class Encryption():
         self.user_mapped_data[user_id]['about'][label] = content;
 
     def getCoSecretHoldersRange():
-        return range(Encryption.MINIMUM_SECRET_HOLDERS,Encryption.MAXIMUM_SECRET_HOLDERS)
+        return range(Encryption.MINIMUM_SECRET_HOLDERS,(Encryption.MAXIMUM_SECRET_HOLDERS+1))
 
     def getSecretHoldersRange():
-        return range(1,Encryption.MAXIMUM_SECRET_HOLDERS)
+        return range(1,(Encryption.MAXIMUM_SECRET_HOLDERS+1))
             
     def getStartnumber(self):
         index = 0
@@ -84,7 +84,7 @@ class Encryption():
     def compileData(self):
         self.compileContacts()
         index = self.getStartnumber()
-        while index < self.getEndnumber():
+        while index <= self.getEndnumber():
             password_group_name = ''.join(sorted(str(index)))
             if self.isGroupValid(password_group_name):
                 password_group_index_int = int(password_group_name)
@@ -126,11 +126,10 @@ class Encryption():
         data={"user_mapped": self.user_mapped_data, "group_mapped": self.group_mapped_data}
         self.encryptToJsonFile(data,file_path,self.master_password)
         
-    def encryptMainData(self):
-        self.cli.executeCommand('tar -C"' + self.paths.getDecryptedMainDataStandartFolder() + '" -cvzf - ./ | gpg -c --batch --passphrase "' + self.master_password +'" > "' + self.paths.getEncryptedMainDataFile() + '"')
+    def encryptMainData(self,input_directory):
+        self.cli.executeCommand('tar -C"' + input_directory + '" -cvzf - ./ | gpg -c --batch --passphrase "' + self.master_password +'" > "' + self.paths.getEncryptedMainDataFile() + '"')
     
-    def encryptAll(self):
+    def encryptMetaData(self):
         self.encryptUserFile()
         self.encryptAccumulatedFile()
         self.encryptGroupFiles()
-        self.encryptMainData()

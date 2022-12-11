@@ -19,7 +19,7 @@ class Cleanup():
         try:
             self.cli.executeCommand('rm -r ' + folder_path + '*')
         except Exception as error:
-            print(error)
+            pass
     
     def cleanupFiles(self,file_type):
         for folder_path in self.getAllFilePaths(file_type):
@@ -29,7 +29,7 @@ class Cleanup():
         try:
             self.cli.executeCommand('find "' + self.paths.getDataFolderPath(Paths.TYPE_ENCRYPTED) + '" -not -name "*' + str(user) +'*" -type f -print | xargs rm -v')   
         except Exception as error:
-            print(error)
+            pass
         self.cleanupFiles(Paths.TYPE_DECRYPTED)
 
     def deleteAll(self):

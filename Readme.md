@@ -43,14 +43,14 @@ python scripts/main.py --mode cleanup --file-types encrypted
 ## decrypt
 
 ### decrypt automatic
-To decrypt the data type in:
+To decrypt the data execute:
 
 ```bash 
 python scripts/main.py --mode decrypt
 ```
 
 ### decrypt defined user
-To decrypt the data for a defined user type in:
+To decrypt the data for a defined user execute:
 
 ```bash 
 python scripts/main.py --mode decrypt --user "<<user_id>>"
@@ -58,13 +58,19 @@ python scripts/main.py --mode decrypt --user "<<user_id>>"
 
 ## encrypt
 
-### encrypt all data
+### encrypt main data
 
 ```bash 
-python scripts/main.py --amount 3 --quota 50 --mode encrypt --add-user-information --master-password "{{master_password}}"
+python scripts/main.py --secret-holders-amount "<<amount>>" --quota "<<quota>>" --mode encrypt --master-password "<<master_password>>" --input-directory "<<input_directory>>"
 ```
 
-### encrypt master-password file
+### encrypt master password
+
+To encrypt the master-password file and to create the neccessary encrypted meta data execute: 
+
+```bash 
+python scripts/main.py --secret-holders-amount "<<amount>>" --quota "<<quota>>" --mode encrypt --add-user-information --master-password "<<master_password>>" --create-meta-data
+```
 
 ## todo 
 - add data-input attribut
