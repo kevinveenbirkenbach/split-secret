@@ -71,7 +71,3 @@ To encrypt the master-password file and to create the neccessary encrypted meta 
 ```bash 
 python scripts/main.py --secret-holders-amount "<<amount>>" --quota "<<quota>>" --mode encrypt --add-user-information --master-password "<<master_password>>" --create-meta-data
 ```
-
-## todo 
-- add data-input attribut
-- add data-output attribut
