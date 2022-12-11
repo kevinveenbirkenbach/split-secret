@@ -120,16 +120,33 @@ class Encryption():
             data=self.user_mapped_data[user_id]
             password=self.user_mapped_data[user_id]['user_password']
             self.encryptToJsonFile(data,file_path,password)
-            
-    def encryptAccumulatedFile(self):
-        file_path=self.paths.getAccumulatedFilePath(Paths.TYPE_ENCRYPTED)
+    '''
+    This saving as decrypted file is necessary due to the reason that the shell can't deal with unlimited string length.
+    See: https://stackoverflow.com/questions/30650841/why-am-i-getting-errno-7-argument-list-too-long-and-oserror-errno-24-too-ma
+    '''
+    def encryptFileToFile(self,input_file,output_file,password):
+        self.cli.executeCommand('cat \'' + input_file + '\' | gpg --symmetric --armor --batch --passphrase "' + password + '" -o "' + output_file + '"')
+    
+    def deleteDecryptedAccumulatedFile(self):
+        self.cli.executeCommand('rm ' + self.paths.getAccumulatedFilePath(Paths.TYPE_DECRYPTED))
+    
+    def saveDecryptedAccumulatedFile(self):
+        file_path=self.paths.getAccumulatedFilePath(Paths.TYPE_DECRYPTED)
         data={"user_mapped": self.user_mapped_data, "group_mapped": self.group_mapped_data}
-        self.encryptToJsonFile(data,file_path,self.master_password)
+        with open(file_path, 'w') as file:
+            json.dump(data, file)
+        
+    def encryptAccumulatedFile(self):
+        self.saveDecryptedAccumulatedFile()
+        encrypted_file_path=self.paths.getAccumulatedFilePath(Paths.TYPE_ENCRYPTED)
+        decrypted_file_path=self.paths.getAccumulatedFilePath(Paths.TYPE_DECRYPTED)
+        self.encryptFileToFile(decrypted_file_path,encrypted_file_path,self.master_password)
+        self.deleteDecryptedAccumulatedFile()
         
     def encryptMainData(self,input_directory):
         self.cli.executeCommand('tar -C"' + input_directory + '" -cvzf - ./ | gpg -c --batch --passphrase "' + self.master_password +'" > "' + self.paths.getEncryptedMainDataFile() + '"')
     
     def encryptMetaData(self):
         self.encryptUserFile()
-        self.encryptAccumulatedFile()
         self.encryptGroupFiles()
+        self.encryptAccumulatedFile()
