@@ -1,7 +1,7 @@
 import argparse
 from classes.Encryption import Encryption
 from classes.Cleanup import Cleanup
-from classes.Decryption import Decryption
+from classes.Decryption import Decryption, AutomaticIdentificationImpossibleException
 from getpass import getpass
 import traceback
 from classes.Cli import Cli
@@ -61,9 +61,16 @@ try:
         if args.mode == 'decrypt':
             decrypt = Decryption(cli,paths)
             if args.master_password is None:
-                if args.user is None: 
-                    print("Type in the user id:")
-                    decrypt.initializeUser(input())
+                if args.user is None:
+                    try:
+                        print("Attempt to identify user.") 
+                        user_id = decrypt.identifyUser()
+                        print("The user id is: " + user_id)
+                    except:
+                        print("A automatic user id identification wasn't possible.")
+                        print("Type in the user id:")
+                        user_id = input()
+                    decrypt.initializeUser(user_id)
                 else:
                     decrypt.initializeUser(args.user)
                 if args.user_password is None:

@@ -8,7 +8,7 @@ class Cleanup():
     def getAllFilePaths(self,file_type):
         all_file_paths = [
             self.paths.getGroupFilesFolderPath(file_type),
-            self.paths.getUserFilesFolderPath(file_type),
+            self.paths.getUserFilesPath(file_type),
             self.paths.getAccumulatedFilePath(file_type)
             ]
         if file_type == Paths.TYPE_DECRYPTED:

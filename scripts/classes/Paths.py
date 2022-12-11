@@ -16,7 +16,7 @@ class Paths():
     def getGroupFilesFolderPath(self,folder_type):
         return self.getDataFolderPath(folder_type) + "group_files/"
     
-    def getUserFilesFolderPath(self,folder_type):
+    def getUserFilesPath(self,folder_type):
         return self.getDataFolderPath(folder_type) + "user_files/"
     
     def getEncryptedMainDataFile(self):
@@ -29,9 +29,12 @@ class Paths():
         if file_type == Paths.TYPE_ENCRYPTED:
             return '.gpg'
         return ''
+
+    def getUserFileSuffix(self,file_type):
+        return '.json' + self.getFileExtension(file_type)
     
     def getUserFilePath(self,user_id,file_type):
-        return self.getUserFilesFolderPath(file_type)+user_id+'.json' + self.getFileExtension(file_type);
+        return self.getUserFilesPath(file_type) + user_id + self.getUserFileSuffix(file_type);
     
     def getGroupFilePath(self,group_id,file_type):
         return self.getGroupFilesFolderPath(file_type) + str(group_id) + '.txt' + self.getFileExtension(file_type);

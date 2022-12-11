@@ -1,5 +1,9 @@
 import json
+import os
 from pathlib import Path
+
+class AutomaticIdentificationImpossibleException(Exception):
+    pass
 
 class Decryption():
     
@@ -9,6 +13,18 @@ class Decryption():
         self.cli = cli
         self.paths = paths
     
+    def identifyUser(self):
+        file_type = self.paths.TYPE_ENCRYPTED
+        file_names = next(os.walk(self.paths.getUserFilesPath(file_type)), (None, None, []))[2]
+        users = []
+        user_file_suffix = self.paths.getUserFileSuffix(file_type)
+        for file in file_names:
+            if user_file_suffix in file:
+                users.append(file.replace(user_file_suffix, ''))
+        if len(users) < 2:
+            return users[0]
+        raise AutomaticIdentificationImpossibleException()        
+            
     def initializeUser(self,user_id):
         self.user_id=str(user_id)
         self.user_file_decrypted_path = self.paths.getUserFilePath(self.user_id,self.paths.TYPE_DECRYPTED)

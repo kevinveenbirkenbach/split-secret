@@ -42,8 +42,8 @@ python scripts/main.py --mode cleanup --file-types encrypted
 
 ## decrypt
 
-### decrypt automatic (todo)
-To decrypt the data for a defined user type in:
+### decrypt automatic
+To decrypt the data type in:
 
 ```bash 
 python scripts/main.py --mode decrypt
@@ -64,7 +64,7 @@ python scripts/main.py --mode decrypt --user "<<user_id>>"
 python scripts/main.py --amount 3 --quota 50 --mode encrypt --add-user-information --master-password "{{master_password}}"
 ```
 
-### encrypt master-password fuile
+### encrypt master-password file
 
 ## todo 
 - add data-input attribut
