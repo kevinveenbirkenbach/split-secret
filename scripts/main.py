@@ -42,6 +42,7 @@ try:
         args = parser.parse_args()
 
         print("Application started.")
+        print("To leave the appplication use the key kombination: <<Ctr>> + <<Alt>> + <<C>>")
         print("Selected Mode: " + args.mode)
         
         if args.mode == 'cleanup':   

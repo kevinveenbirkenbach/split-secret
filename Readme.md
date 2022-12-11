@@ -4,7 +4,7 @@ The purpose of this software is to splitt a secret over multiple people. Just if
 ## requirements 
 
 ### system
-This software is developed for and on a [Arch Linux](https://archlinux.org/) system.
+This software is developed for and on an [Arch Linux](https://archlinux.org/) system.
 
 ### setup
 
@@ -69,4 +69,3 @@ python scripts/main.py --amount 3 --quota 50 --mode encrypt --add-user-informati
 ## todo 
 - add data-input attribut
 - add data-output attribut
-- write scenario test
