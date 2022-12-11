@@ -114,4 +114,6 @@ class Decryption():
         self.decryptFile(self.user_password, input_file_path, output_file_path)
     
     def decryptMainData(self):
-        self.cli.executeCommand('gpg --batch --passphrase "' + self.getMasterPassword() + '" -d "' + self.paths.getEncryptedMainDataFile() + '" | tar -xvzf - "' + self.paths.getDecryptedMainDataStandartFolder() + '"')
+        self.cli.executeCommand('gpg --batch --passphrase "' + self.getMasterPassword() + '" -d "' + self.paths.getEncryptedMainDataFile() + '" | tar --one-top-level="' + self.paths.getDecryptedMainDataStandartFolder() + '" -xvzf -')
+        print(self.cli.getCommandString())
+        print(self.cli.getOutputString())

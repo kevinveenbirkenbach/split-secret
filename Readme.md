@@ -4,6 +4,11 @@ The purpose of this software is to splitt a secret over multiple people. Just if
 # testing
 ```bash 
 python scripts/main.py --mode cleanup && 
+echo "werewrw" > data/decrypted/main_data/test123.txt
+echo "werewrw" > data/decrypted/main_data/test124.txt
+mkdir data/decrypted/main_data/folder
+echo "werewrw" > data/decrypted/main_data/folder/test124.txt
+
 python scripts/main.py --amount 3 --quota 50 --mode encrypt --add-user-information --master-password "ewrwerwerew"  << END_OF_INPUTS
 alpha bravo
 123123812908
@@ -21,9 +26,10 @@ END_OF_INPUTS
 python scripts/main.py --mode decrypt --master-password "ewrwerwerew" 
 
 
-python scripts/main.py --mode cleanup --file-types decrypted && python scripts/main.py --mode decrypt --user "1" --user-password "DDB2QYHP4X0PDR0ZX9LBLACNL6VAXLXMNEZJDOOGUTENSI6UDYGPOR5CV01YLI49" << END_OF_INPUTS
+python scripts/main.py --mode cleanup --file-types decrypted && 
+python scripts/main.py --mode decrypt --user "1" --user-password "Y4GYTEW80SCQQDTIKOJ6YNCIP6MBBEM68SCKBAA1VWAQFRSPNGHEBKHSFZQENDRB" << END_OF_INPUTS
 2
-EOQXCYGEY2IMKAJP5VOCRVRH9LPYAPK9IC0ID0GMSJ5KXNXJHPNUBUKEVLE2WHQJ
+VGCQPW2LIKJ7SDFFLUZXBXGFPZ6L8RGPTS7TLCNN9GLR82RPHRSN34YZUXF0L27V
 END_OF_INPUTS
 ```
 # Requirements to know
@@ -48,6 +54,7 @@ END_OF_INPUTS
 - implement tails setup script
 - add data-input attribut
 - add data-output attribut
+- write scenario test
 
 ## Further Information
 - https://www.tutorialspoint.com/python/python_command_line_arguments.htm

@@ -148,7 +148,6 @@ try:
                         encrypt.addInformationToUser(user_id, label, str(input()))
             encrypt.compileData()
             encrypt.encryptAll()
-            
             dirty_exit()
 except KeyboardInterrupt:
     print("Program interrupted by user.")
