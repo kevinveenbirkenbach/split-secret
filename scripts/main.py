@@ -137,7 +137,7 @@ try:
                         print("An unexpected error occured: \n" + traceback.format_exc())
                 print("Decrypting main data.")
                 decrypt.decryptMainData()
-                print("All data decrypted.")
+                print("The data was decrypted to: " + path.getDecryptedMainDataStandartFolder())
                 dirty_exit()
             print("Decrypting accumulated data.")
             decrypt.setUserPassword(args.master_password)
