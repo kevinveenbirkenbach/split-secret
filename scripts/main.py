@@ -166,6 +166,8 @@ try:
                         encrypt.addInformationToUser(user_id, label, str(input()))
             encrypt.compileData()
             if args.meta_data is True:
+                print('Cleaning up encrypted meta data.')
+                cleanup.cleanupMetaData(Paths.TYPE_ENCRYPTED)
                 print("Create and encrypt meta data.")
                 encrypt.encryptMetaData()
             if args.input_directory is not None:

@@ -27,7 +27,7 @@ python scripts/main.py --mode cleanup
 ```
 
 ### delete decrypted data
-To delete all encrypted data execute:
+To delete all decrypted data execute:
 
 ```bash 
 python scripts/main.py --mode cleanup --file-types decrypted
@@ -65,7 +65,7 @@ python scripts/main.py --mode decrypt --user "<<user_id>>"
 ```
 
 ### addtional instructions
-In the [INSTRUCTIONS.md](./Instruction.md) file the master encrypter can leave additional instructions.
+In the [INSTRUCTIONS.md](./INSTRUCTIONS.md) file the master encrypter can leave additional instructions.
 
 ## encrypt
 
@@ -74,9 +74,32 @@ In the [INSTRUCTIONS.md](./Instruction.md) file the master encrypter can leave a
 python scripts/main.py --secret-holders-amount "<<amount>>" --quota "<<quota>>" --mode encrypt --master-password "<<master_password>>" --input-directory "<<input_directory>>"
 ```
 
-### encrypt master password
+### generate encryption data
 To encrypt the master-password file and to create the neccessary encrypted meta data execute: 
 
 ```bash 
 python scripts/main.py --secret-holders-amount "<<amount>>" --quota "<<quota>>" --mode encrypt --add-user-information --master-password "<<master_password>>" --meta
+```
+
+### generate encryption data with user info
+To encrypt the master-password file and to create the neccessary encrypted meta data with additional user infos data execute: 
+
+```bash 
+python scripts/main.py --secret-holders-amount "3" --quota "50" --mode encrypt --add-user-information --master-password "<<master_password>>" --meta --add-user-information << EOL 
+Nutzer 1
++123456-1
+test@test1.de
+Addresse Nutzer 1
+Zusätzliche Notizen Nutzer 1
+Nutzer 2
++123456-2
+test@test2.de
+Addresse Nutzer 2
+Zusätzliche Notizen Nutzer 2
+Nutzer 3
++123456-3
+test@test3.de
+Addresse Nutzer 3
+Zusätzliche Notizen Nutzer 3
+EOL
 ```
