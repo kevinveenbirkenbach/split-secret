@@ -5,6 +5,7 @@ import numpy
 import re
 import json
 from .Paths import Paths
+import shlex
 
 class Encryption():
     
@@ -104,7 +105,7 @@ class Encryption():
             index += 1
             
     def encryptStringToFile(self,text,output_file,password):
-        self.cli.executeCommand('echo \'' + text + '\' | gpg --symmetric --armor --batch --passphrase "' + password + '" -o "' + output_file + '"')
+        self.cli.executeCommand('echo ' + shlex.quote(text) + ' | gpg --symmetric --armor --batch --passphrase ' + shlex.quote(password) + ' -o "' + output_file + '"')
     
     def encryptGroupFiles(self):
         for password_group_index_int in self.group_mapped_data:
@@ -125,7 +126,7 @@ class Encryption():
     See: https://stackoverflow.com/questions/30650841/why-am-i-getting-errno-7-argument-list-too-long-and-oserror-errno-24-too-ma
     '''
     def encryptFileToFile(self,input_file,output_file,password):
-        self.cli.executeCommand('cat \'' + input_file + '\' | gpg --symmetric --armor --batch --passphrase "' + password + '" -o "' + output_file + '"')
+        self.cli.executeCommand('cat \'' + input_file + '\' | gpg --symmetric --armor --batch --passphrase ' + shlex.quote(password) + ' -o "' + output_file + '"')
     
     def deleteDecryptedAccumulatedFile(self):
         self.cli.executeCommand('rm ' + self.paths.getAccumulatedFilePath(Paths.TYPE_DECRYPTED))
@@ -144,7 +145,7 @@ class Encryption():
         self.deleteDecryptedAccumulatedFile()
         
     def encryptMainData(self,input_directory):
-        self.cli.executeCommand('tar -C"' + input_directory + '" -cvzf - ./ | gpg -c --batch --passphrase "' + self.master_password +'" > "' + self.paths.getEncryptedMainDataFile() + '"')
+        self.cli.executeCommand('tar -C"' + input_directory + '" -cvzf - ./ | gpg -c --batch --passphrase ' + shlex.quote(self.master_password) + ' > "' + self.paths.getEncryptedMainDataFile() + '"')
     
     def encryptMetaData(self):
         self.encryptUserFile()

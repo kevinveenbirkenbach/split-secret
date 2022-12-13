@@ -1,6 +1,7 @@
 import json
 import os
 from pathlib import Path
+import shlex
 
 class AutomaticIdentificationImpossibleException(Exception):
     pass
@@ -35,11 +36,17 @@ class Decryption():
         self.initializeNeededDecryptersAmount()
         self.initializeValidDecrypterIds()
     
+    def getEscapedMasterPassword(self):
+        return shlex.quote(self.master_password)
+    
     def initializeGroupDataEncryption(self):
         self.group_name = self.getDecryptersGroupName()
         self.encrypted_group_file_path = self.paths.getGroupFilePath(self.group_name, self.paths.TYPE_DECRYPTED)
         self.decryptGroupFile()
         self.master_password = self.loadTxtFile(self.encrypted_group_file_path).strip()
+
+    def getMasterPassword(self):
+        return self.master_password
 
     def initializeNeededDecryptersAmount(self):
         self.needed_decrypters_amount = len(str(list(self.user_data['groups'].keys())[0]))
@@ -69,9 +76,6 @@ class Decryption():
         for password_share_index in sorted(self.password_parts):
             shared_password += str(self.password_parts[password_share_index])
         return shared_password
-    
-    def getMasterPassword(self):
-        return self.master_password
     
     def addDecrypterId(self,decrypter_id):
         decrypter_id = int(decrypter_id)
@@ -114,7 +118,7 @@ class Decryption():
         return data
     
     def decryptFile(self,password,input_file_path,output_file_path):
-        self.cli.executeCommand('gpg --batch --passphrase "'+ password + '" -o "' + output_file_path +'" "'+ input_file_path+'"')
+        self.cli.executeCommand('gpg --batch --passphrase '+ shlex.quote(password)  + ' -o "' + output_file_path +'" "'+ input_file_path+'"')
     
     def decryptUserFile(self):
         input_file_path = self.paths.getUserFilePath(self.user_id,self.paths.TYPE_ENCRYPTED)
@@ -130,4 +134,4 @@ class Decryption():
         self.decryptFile(self.user_password, input_file_path, output_file_path)
     
     def decryptMainData(self):
-        self.cli.executeCommand('gpg --batch --passphrase "' + self.getMasterPassword() + '" -d "' + self.paths.getEncryptedMainDataFile() + '" | tar --one-top-level="' + self.paths.getDecryptedMainDataStandartFolder() + '" -xvzf -')
+        self.cli.executeCommand('gpg --batch --passphrase ' + shlex.quote(self.getMasterPassword()) + ' -d "' + self.paths.getEncryptedMainDataFile() + '" | tar --one-top-level="' + self.paths.getDecryptedMainDataStandartFolder() + '" -xvzf -')

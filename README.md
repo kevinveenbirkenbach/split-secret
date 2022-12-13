@@ -40,14 +40,22 @@ To delete all encrypted data execute:
 python scripts/main.py --mode cleanup --file-types encrypted
 ```
 
-## decrypt
+## decrypt 
 
 ### decrypt automatic
 To decrypt the data execute:
 
 ```bash 
-python scripts/main.py --mode decrypt
+python scripts/main.py --mode decrypt-data
 ```
+
+### decrypt automatic
+To decrypt the accumulated datafile execute:
+
+```bash 
+python scripts/main.py --mode decrypt --decrypt-accumulated-file
+```
+
 
 ### decrypt defined user
 To decrypt the data for a defined user execute:
@@ -56,16 +64,17 @@ To decrypt the data for a defined user execute:
 python scripts/main.py --mode decrypt --user "<<user_id>>"
 ```
 
+### addtional instructions
+In the [INSTRUCTIONS.md](./Instruction.md) file the master encrypter can leave additional instructions.
+
 ## encrypt
 
 ### encrypt main data
-
 ```bash 
 python scripts/main.py --secret-holders-amount "<<amount>>" --quota "<<quota>>" --mode encrypt --master-password "<<master_password>>" --input-directory "<<input_directory>>"
 ```
 
 ### encrypt master password
-
 To encrypt the master-password file and to create the neccessary encrypted meta data execute: 
 
 ```bash 
