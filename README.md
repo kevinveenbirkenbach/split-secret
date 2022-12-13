@@ -1,4 +1,4 @@
-# Splitted Secret
+# Split Secret
 The purpose of this software is to splitt a secret over multiple people. Just if a defined amount of this people meet together they can encrypt the secret and have access to it. 
 
 ## requirements 
