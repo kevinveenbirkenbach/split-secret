@@ -49,11 +49,11 @@ To decrypt the data execute:
 python scripts/main.py --mode decrypt-data
 ```
 
-### decrypt automatic
+### decrypt accumulated file
 To decrypt the accumulated datafile execute:
 
 ```bash 
-python scripts/main.py --mode decrypt --decrypt-accumulated-file
+python scripts/main.py --mode decrypt --meta
 ```
 
 
@@ -78,5 +78,5 @@ python scripts/main.py --secret-holders-amount "<<amount>>" --quota "<<quota>>" 
 To encrypt the master-password file and to create the neccessary encrypted meta data execute: 
 
 ```bash 
-python scripts/main.py --secret-holders-amount "<<amount>>" --quota "<<quota>>" --mode encrypt --add-user-information --master-password "<<master_password>>" --create-meta-data
+python scripts/main.py --secret-holders-amount "<<amount>>" --quota "<<quota>>" --mode encrypt --add-user-information --master-password "<<master_password>>" --meta
 ```

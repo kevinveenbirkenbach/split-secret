@@ -36,12 +36,11 @@ try:
         parser.add_argument('--secret-holders-amount',type=int, dest='amount_of_secret_holders',required=False,choices=Encryption.getCoSecretHoldersRange(),help="Needed for creating of encryption meta data.")
         parser.add_argument('--quota', type=int, dest='decryption_quota', choices=range(1,101),required=False)
         parser.add_argument('--master-password',type=str, dest='master_password',required=False)
-        parser.add_argument('--decrypt-accumulated-file',type=bool, dest='decrypt_accumulated_file', default=False , action=argparse.BooleanOptionalAction ,required=False, help="Decrypts the accumulated file.")
         parser.add_argument('--user-password',type=str, dest='user_password',required=False)
         parser.add_argument('--user',type=int, dest='user',choices=Encryption.getSecretHoldersRange(),required=False)
         parser.add_argument('--add-user-information',type=bool, dest='add_user_information', default=False, required=False, action=argparse.BooleanOptionalAction, help="Add additional information to users.")
         parser.add_argument('--input-directory',type=str,dest='input_directory',required=False, help="The directory from which the data should be encrypted.")
-        parser.add_argument('--create-meta-data',type=bool, dest='create_meta_data', default=False, required=False, action=argparse.BooleanOptionalAction, help="When mode is encrypt and this flag is set, the encrypted meta data is created.")
+        parser.add_argument('--meta-data',type=bool, dest='meta_data', default=False, required=False, action=argparse.BooleanOptionalAction, help="When mode is encrypt and this flag is set, the encrypted meta data is created. When mode is decrypt and this flag is set the accumulated file will be decrypted.")
         args = parser.parse_args()
 
         print("Application started.")
@@ -66,7 +65,7 @@ try:
             
         if args.mode == 'decrypt':
             decrypt = Decryption(cli,paths)
-            if args.decrypt_accumulated_file is True:
+            if args.meta_data is True:
                 if args.master_password is None:
                     print("Enter the master password:")
                     master_password = getpass()
@@ -166,7 +165,7 @@ try:
                         print("Enter attribut <<" + label + ">> for user <<" + user_id+ ">>:" )
                         encrypt.addInformationToUser(user_id, label, str(input()))
             encrypt.compileData()
-            if args.create_meta_data is True:
+            if args.meta_data is True:
                 print("Create and encrypt meta data.")
                 encrypt.encryptMetaData()
             if args.input_directory is not None:
