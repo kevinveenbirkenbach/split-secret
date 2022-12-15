@@ -18,6 +18,14 @@ pip install numpy
 
 ## cleanup data
 
+### cleanup for user
+
+To delete all data which isn't necessary for the user:
+
+```bash 
+python scripts/main.py --mode cleanup --user "<<user>>"
+```
+
 ### delete all data
 
 To delete all data execute:
