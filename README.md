@@ -94,20 +94,20 @@ To encrypt the master-password file and to create the neccessary encrypted meta 
 
 ```bash 
 python scripts/main.py --secret-holders-amount "3" --quota "50" --mode encrypt --add-user-information --master-password "<<master_password>>" --meta --add-user-information << EOL 
-Nutzer 1
-+123456-1
-test@test1.de
-Addresse Nutzer 1
-Zusätzliche Notizen Nutzer 1
-Nutzer 2
-+123456-2
-test@test2.de
-Addresse Nutzer 2
-Zusätzliche Notizen Nutzer 2
-Nutzer 3
-+123456-3
+Alan Turing
++ 12358
+turing@turing-bomb.world
+Bletchley Park
+¯\_(ツ)_/¯
+Ada Lovelace 
++ 132134
+best@algorythm.ai
+Somewhere in London 
+:)
+John von Neumann
++ 5488142
 test@test3.de
-Addresse Nutzer 3
-Zusätzliche Notizen Nutzer 3
+Washington D.C.
+<3 <3 <3
 EOL
 ```
