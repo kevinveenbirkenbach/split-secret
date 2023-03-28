@@ -54,7 +54,7 @@ python scripts/main.py --mode cleanup --file-types encrypted
 To decrypt the data execute:
 
 ```bash 
-python scripts/main.py --mode decrypt-data
+python scripts/main.py --mode decrypt
 ```
 
 ### decrypt accumulated file
