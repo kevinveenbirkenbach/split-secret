@@ -1,113 +1,93 @@
-# Split Secret
-The purpose of this software is to splitt a secret over multiple people. Just if a defined amount of this people meet together they can encrypt the secret and have access to it. 
+# Split Secret (sisec) 🔐
 
-## requirements 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE) [![GitHub stars](https://img.shields.io/github/stars/kevinveenbirkenbach/split-secret.svg?style=social)](https://github.com/kevinveenbirkenbach/split-secret/stargazers)
 
-### system
-This software is developed for and on an [Arch Linux](https://archlinux.org/) system.
+Split Secret is a versatile command-line tool for securely splitting a master secret among multiple users. Only when a defined quorum of users combines their secret shares can the original secret be decrypted. The tool also supports robust encryption, decryption, and cleanup operations to ensure sensitive data is managed securely throughout the process.
 
-### setup
+---
 
-Before executing the script it may be necessary to install the following software packages:
+## 🛠 Features
+
+- **Secret Splitting:** Divide a master secret into shares distributed among users.
+- **Encryption & Decryption:** Securely encrypt and decrypt data files using strong cryptographic methods.
+- **User Management:** Add and manage user information along with their secret shares.
+- **Cleanup Operations:** Remove decrypted files after processing to maintain security.
+- **Interactive Modes:** Operate in active, preview, or interactive modes to match your workflow.
+- **Parallel Processing:** Efficiently handles file operations using process pooling.
+
+---
+
+## 📥 Installation
+
+Install Split Secret via [Kevin's Package Manager](https://github.com/kevinveenbirkenbach/package-manager) under the alias `sisec`:
 
 ```bash
-pacman -S gpg tar python pip python-pip
-pip install numpy
-```
-## commands
-
-## cleanup data
-
-### cleanup for user
-
-To delete all data which isn't necessary for the user:
-
-```bash 
-python scripts/main.py --mode cleanup --user "<<user>>"
+package-manager install sisec
 ```
 
-### delete all data
+This command installs Split Secret globally, making it available as `sisec` in your terminal. 🚀
 
-To delete all data execute:
+---
 
-```bash 
-python scripts/main.py --mode cleanup
+## 🚀 Usage
+
+Split Secret offers several modes for managing your secrets. Here are a few example commands:
+
+### Cleanup Data
+To delete all unnecessary decrypted and encrypted files:
+```bash
+sisec --mode cleanup
 ```
 
-### delete decrypted data
-To delete all decrypted data execute:
-
-```bash 
-python scripts/main.py --mode cleanup --file-types decrypted
-```
-
-### delete all encrypted data
-To delete all encrypted data execute:
-
-```bash 
-python scripts/main.py --mode cleanup --file-types encrypted
-```
-
-## decrypt 
-
-### decrypt automatic
-To decrypt the data execute:
-
-```bash 
-python scripts/main.py --mode decrypt
-```
-
-### decrypt accumulated file
-To decrypt the accumulated datafile execute:
-
-```bash 
-python scripts/main.py --mode decrypt --meta
-```
-
-
-### decrypt defined user
-To decrypt the data for a defined user execute:
-
-```bash 
-python scripts/main.py --mode decrypt --user "<<user_id>>"
-```
-
-### addtional instructions
-In the [INSTRUCTIONS.md](./INSTRUCTIONS.md) file the master encrypter can leave additional instructions.
-
-## encrypt
-
-### encrypt main data
-```bash 
-python scripts/main.py --secret-holders-amount "<<amount>>" --quota "<<quota>>" --mode encrypt --master-password "<<master_password>>" --input-directory "<<input_directory>>"
-```
-
-### generate encryption data
-To encrypt the master-password file and to create the neccessary encrypted meta data execute: 
-
-```bash 
-python scripts/main.py --secret-holders-amount "<<amount>>" --quota "<<quota>>" --mode encrypt --add-user-information --master-password "<<master_password>>" --meta
-```
-
-### generate encryption data with user info
-To encrypt the master-password file and to create the neccessary encrypted meta data with additional user infos data execute: 
-
-```bash 
-python scripts/main.py --secret-holders-amount "3" --quota "50" --mode encrypt --add-user-information --master-password "<<master_password>>" --meta --add-user-information << EOL 
+### Encrypt Data & Generate Meta Data
+Encrypt the master secret file and generate encrypted metadata with additional user information:
+```bash
+sisec --secret-holders-amount 3 --quota 50 --mode encrypt --add-user-information --master-password "your_master_password" --meta --add-user-information << EOL
 Alan Turing
-+ 12358
++12358
 turing@turing-bomb.world
 Bletchley Park
 ¯\_(ツ)_/¯
-Ada Lovelace 
-+ 132134
+Ada Lovelace
++132134
 best@algorythm.ai
-Somewhere in London 
+Somewhere in London
 :)
 John von Neumann
-+ 5488142
++5488142
 test@test3.de
 Washington D.C.
 <3 <3 <3
 EOL
 ```
+
+### Decrypt Meta Data File
+To decrypt the accumulated metadata file:
+```bash
+sisec --mode decrypt --meta
+```
+
+For additional commands and options (such as user-specific decryption, file type filtering, or recursive processing), use:
+```bash
+sisec --help
+```
+
+---
+
+## 🧑‍💻 Author
+
+Developed by **Kevin Veen-Birkenbach**  
+- 📧 [kevin@veen.world](mailto:kevin@veen.world)  
+- 🌐 [https://www.veen.world](https://www.veen.world)
+
+---
+
+## 📜 License
+
+This project is licensed under the **MIT License**.
+
+---
+
+## 🤝 Contributions
+
+Contributions are welcome! Please feel free to fork the repository, submit pull requests, or open issues if you have suggestions or encounter any problems. Let's work together to make secure secret management accessible and efficient! 😊
