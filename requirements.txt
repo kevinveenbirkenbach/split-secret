@@ -1,0 +1,2 @@
+pacman -S gpg tar python pip python-pip
+pip install numpy
