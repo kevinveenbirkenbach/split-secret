@@ -34,10 +34,10 @@ class Paths():
         return '.json' + self.getFileExtension(file_type)
     
     def getUserFilePath(self,user_id,file_type):
-        return self.getUserFilesPath(file_type) + user_id + self.getUserFileSuffix(file_type);
+        return self.getUserFilesPath(file_type) + user_id + self.getUserFileSuffix(file_type)
     
     def getGroupFilePath(self,group_id,file_type):
-        return self.getGroupFilesFolderPath(file_type) + str(group_id) + '.txt' + self.getFileExtension(file_type);
+        return self.getGroupFilesFolderPath(file_type) + str(group_id) + '.txt' + self.getFileExtension(file_type)
     
     def getAccumulatedFilePath(self,file_type):
-        return self.getDataFolderPath(file_type) + 'accumulated.json' + self.getFileExtension(file_type);
+        return self.getDataFolderPath(file_type) + 'accumulated.json' + self.getFileExtension(file_type)

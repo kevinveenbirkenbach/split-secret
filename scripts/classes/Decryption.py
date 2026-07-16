@@ -9,7 +9,7 @@ class AutomaticIdentificationImpossibleException(Exception):
 class Decryption():
     
     def __init__(self,cli,paths):
-        self.user_id='0';
+        self.user_id='0'
         self.user_password=''
         self.cli = cli
         self.paths = paths

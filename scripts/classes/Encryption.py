@@ -1,7 +1,6 @@
 import random
 import string
 import math
-import numpy
 import re
 import json
 from .Paths import Paths
@@ -32,13 +31,13 @@ class Encryption():
         user_count = 1
         while user_count <= self.amount_of_secret_holders:
             self.user_mapped_data[str(user_count)] = {"groups":{},"user_password":self.createPassword(self.USER_PASSWORD_LENGTHS),"about":{}}
-            user_count += 1;
+            user_count += 1
     
     def initializeGroupData(self):
         self.group_mapped_data = {} 
 
     def addInformationToUser(self,user_id,label,content):
-        self.user_mapped_data[user_id]['about'][label] = content;
+        self.user_mapped_data[user_id]['about'][label] = content
 
     def getCoSecretHoldersRange():
         return range(Encryption.MINIMUM_SECRET_HOLDERS,(Encryption.MAXIMUM_SECRET_HOLDERS+1))
@@ -89,14 +88,14 @@ class Encryption():
             password_group_name = ''.join(sorted(str(index)))
             if self.isGroupValid(password_group_name):
                 password_group_index_int = int(password_group_name)
-                if not password_group_index_int in self.group_mapped_data:
+                if password_group_index_int not in self.group_mapped_data:
                     self.group_mapped_data[password_group_index_int] = {}
                     self.group_mapped_data[password_group_index_int]['members'] = {}
                     self.group_mapped_data[password_group_index_int]['password'] = '' 
                     password = ''
                     for secret_holder_index in password_group_name:
                         self.group_mapped_data[password_group_index_int]['members'][secret_holder_index]={}
-                        particial_password_length= int(self.OVERALL_PASSWORD_LENGTHS*self.quota_factor); 
+                        particial_password_length= int(self.OVERALL_PASSWORD_LENGTHS*self.quota_factor) 
                         password_part = self.createPassword(particial_password_length)
                         self.group_mapped_data[password_group_index_int]['members'][secret_holder_index] = password_part
                         password += password_part

@@ -1,7 +1,7 @@
 import argparse
 from classes.Encryption import Encryption
 from classes.Cleanup import Cleanup
-from classes.Decryption import Decryption, AutomaticIdentificationImpossibleException
+from classes.Decryption import Decryption
 from getpass import getpass
 import traceback
 from classes.Cli import Cli
@@ -56,7 +56,7 @@ try:
                     print("Deleting all encrypted and decrypted files.")
                     cleanup.deleteAll()
                     standard_exit()
-                print("Deleting all files which aren't related to user: " + str(args.user));
+                print("Deleting all files which aren't related to user: " + str(args.user))
                 cleanup.cleanupForUser(args.user)
                 standard_exit()
             print("Deleting all " + args.file_types + " files.")
@@ -94,15 +94,15 @@ try:
                     decrypt.setUserPassword(getpass())
                     print("Decrypting User File...")
                     try:
-                        decrypt.initializeUserDataDecryption();
-                        break;
+                        decrypt.initializeUserDataDecryption()
+                        break
                     except Exception as error:
                         print("An error occured. Propably you typed in a wrong password :( The error is: " + str(error))
             else:
                 decrypt.setUserPassword(args.user_password)
                 print("Decrypting User File...")
                 try:
-                    decrypt.initializeUserDataDecryption();
+                    decrypt.initializeUserDataDecryption()
                 except Exception as error:
                     print("An error occured. Propably you passed a wrong password :( The error is: " + str(error))
                     clean_exit()
@@ -144,7 +144,7 @@ try:
                     print("\nDecrypting group password file.\n")
                     decrypt.initializeGroupDataEncryption()
                     print("THE MASTER PASSWORD IS: " + decrypt.getMasterPassword())
-                    break;
+                    break
                 except:
                     print("An unexpected error occured: \n" + traceback.format_exc())
             print("Decrypting main data.")
